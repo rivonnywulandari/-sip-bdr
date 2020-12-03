@@ -55,6 +55,21 @@ class ClassroomController extends Controller
     }
 
     /**
+     * Display list of meetings.
+     *
+     * @param  \App\Models\Lecturer  $lecturer
+     * @return \Illuminate\Http\Response
+     */
+    public function showMeetings(Classroom $classroom)
+    {
+        $meetings = $classroom->meeting()->get();
+
+        $response['meeting'] = $meetings;
+        
+        return response()->json($response);
+    }
+
+    /**
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\Classroom  $classroom

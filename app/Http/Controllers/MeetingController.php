@@ -17,7 +17,7 @@ class MeetingController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function meetings($id)
+/*    public function meetings($id)
     {
         $meeting = MeetingResource::collection(Meeting::with('lecturer_classroom')
                         ->where('lecturer_classroom_id', $id)
@@ -25,7 +25,7 @@ class MeetingController extends Controller
 
         return $meeting;
     }
-
+*/
     /**
      * Show the form for creating a new resource.
      *

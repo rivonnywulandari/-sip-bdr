@@ -8,6 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class StudentAttendance extends Model
 {
     use HasFactory;
+    protected $fillable = [ 
+        'presence_status'
+    ];
 
     public function meeting(){
         return $this->belongsTo('App\Models\Meeting');

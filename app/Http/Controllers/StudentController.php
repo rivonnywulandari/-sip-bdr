@@ -55,6 +55,21 @@ class StudentController extends Controller
     }
 
     /**
+     * Display list of meetings.
+     *
+     * @param  \App\Models\Student $student
+     * @return \Illuminate\Http\Response
+     */
+    public function showAttendances(Student $student)
+    {
+        $attendance = $student->student_attendance()->groupby('krs_id', 'meeting_id', 'student_location_id')->get();
+
+        $response['attendance'] = $attendance;
+        
+        return response()->json($response);
+    }
+
+    /**
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\Student  $student

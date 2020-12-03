@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\StudentLocation;
 use App\Models\Student;
 use App\Models\Lecturer;
+use App\Models\StudentAttendance;
 use Illuminate\Http\Request;
 use Auth;
 use App\Http\Resources\StudentLocationResource;
@@ -32,7 +33,9 @@ class StudentLocationController extends Controller
 
             return $studentLocation;
         }
-        else{}
+        else{
+            //
+        }
     }
 
     /**
@@ -133,10 +136,15 @@ class StudentLocationController extends Controller
     {
         $user_id = Auth::user()->id;
         $student_id = Student::where('id' ,'>', 0)->pluck('id')->toArray();
+        $student_attendance = StudentAttendance::where('id' ,'>', 0)->pluck('student_location_id')->toArray();
 
         if(in_array($user_id, $student_id)) {
-            $studentLocation = StudentLocation::findOrFail($id);
-            if($studentLocation->delete()) {
+            if(in_array($id, $student_attendance)) {
+                return response()->json(['error' => 'Location cannot be deleted because it has been approved'], 422);
+            }
+            else {
+                $studentLocation = StudentLocation::findOrFail($id);
+                $studentLocation->delete();
                 return response()->json(['message'=>'Submission has successfully deleted']);
             }
         }

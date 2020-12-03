@@ -37,4 +37,9 @@ class Classroom extends Model
     public function classroom_schedule(){
         return $this->hasMany('App\Models\ClassroomSchedule');
     }
+
+    public function meeting()
+    {
+        return $this->hasManyThrough('App\Models\Meeting', 'App\Models\LecturerClassroom', 'classroom_id', 'lecturer_classroom_id');
+    }
 }

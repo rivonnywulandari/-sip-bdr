@@ -20,7 +20,7 @@ class LecturerClassroomController extends Controller
     public function index()
     {
         $lecturerClassroom = LecturerClassroomResource::collection(LecturerClassroom::with(['lecturer', 'classroom'])
-            ->where('lecturer_id', auth()->guard('lecturers')->user()->id)
+            ->where('lecturer_id', auth()->guard('api')->user()->id)
             ->get());
 
         return $lecturerClassroom;

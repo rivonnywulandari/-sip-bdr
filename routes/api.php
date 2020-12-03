@@ -31,19 +31,27 @@ Route::post('login', 'AuthController@login');
 Route::get('logout', 'AuthController@logout');
 Route::get('user', 'AuthController@getAuthUser');
 
-// Student Classroom
-Route::apiResource('student', 'StudentController');
-Route::apiResource('krs', 'KrsController');
-Route::apiResource('classroom', 'ClassroomController'); // for retrieving student classroom detail
+//Classroom Schedule
 Route::apiResource('schedule', 'ClassroomScheduleController'); // for retrieving classroom schedule
 
-// Student Location Submission
-Route::apiResource('studentlocation', 'StudentLocationController');
+// Student Classroom
+Route::apiResource('student', 'StudentController');
+Route::apiResource('krs', 'KrsController'); //for retrieving student classrooms
+Route::apiResource('classroom', 'ClassroomController'); // for retrieving student classroom detail
 
 // Lecturer Classroom
 Route::apiResource('lecturer', 'LecturerController');
 Route::apiResource('lecturerclassroom','LecturerClassroomController'); // for retrieving lecturer classrooms
 
+// Student Location Submission
+Route::apiResource('studentlocation', 'StudentLocationController');
+Route::get('studentsubmission/{lecturer}', 'LecturerController@showStudentLocations'); // for retrieving student location submissions
+
+//Student Attendances
+Route::apiResource('studentattendance', 'StudentAttendanceController')->except('index');
+Route::get('classattendance/{classroom_id}', 'StudentAttendanceController@showStudentAttendances');
+Route::get('attendance/{student}', 'StudentController@showAttendances');
+
 // Meeting
 Route::apiResource('meeting', 'MeetingController')->except('index');
-Route::get('meetings/{id}', 'MeetingController@meetings');
+Route::get('meetings/{classroom}', 'ClassroomController@showMeetings');

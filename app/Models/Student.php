@@ -29,4 +29,9 @@ class Student extends Model
     public function classroom(){
         return $this->belongsToMany('App\Models\Classroom', 'krs', 'classroom_id', 'student_id');
     }
+
+    public function student_attendance()
+    {
+        return $this->hasManyThrough('App\Models\StudentAttendance', 'App\Models\Krs', 'student_id', 'krs_id');
+    }
 }

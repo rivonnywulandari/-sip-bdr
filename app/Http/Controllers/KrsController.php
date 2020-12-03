@@ -19,15 +19,8 @@ class KrsController extends Controller
      */
     public function index()
     {
-    /*    $krs = Krs::with(['student', 'classroom'])
-            ->where('student_id', 16) //, auth()->guard('student')->user()->id
-            ->get();
-
-        $response["krs"] = $krs;
-
-        return response()->json($response); */
         $krs = KrsResource::collection(Krs::with(['student', 'classroom'])
-            ->where('student_id', auth()->guard('students')->user()->id)
+            ->where('student_id', auth()->guard('api')->user()->id)
             ->get());
 
         return $krs;
