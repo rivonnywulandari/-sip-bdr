@@ -15,6 +15,7 @@ class AuthController extends Controller
         'username' => $request->username,
         'email' => $request->email,
         'password' => bcrypt($request->password),
+        'email_verified_at' => now(),
       ]);
 
       $token = auth()->login($user);

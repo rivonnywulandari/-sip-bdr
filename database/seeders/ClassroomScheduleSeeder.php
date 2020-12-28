@@ -15,8 +15,6 @@ class ClassroomScheduleSeeder extends Seeder
      */
     public function run()
     {
-        //ClassroomSchedule::truncate();
-        
         $classrooms = Classroom::all();
 
         foreach($classrooms as $classroom){

@@ -3,6 +3,8 @@
 namespace Database\Factories;
 
 use App\Models\LecturerClassroom;
+use App\Models\Lecturer;
+use App\Models\Classroom;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LecturerClassroomFactory extends Factory
@@ -21,9 +23,12 @@ class LecturerClassroomFactory extends Factory
      */
     public function definition()
     {
+        $lecturer_ids = Lecturer::select('id')->get();
+        $classroom_ids = Classroom::select('id')->get();
+
         return [
-            'classroom_id' => $this->faker->numberBetween(1, 10),
-            'lecturer_id' => 1,
+            'classroom_id' => $this->faker->randomElement($classroom_ids),
+            'lecturer_id' => $this->faker->randomElement($lecturer_ids),
         ];
     }
 }

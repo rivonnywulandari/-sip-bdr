@@ -5,6 +5,7 @@ namespace Database\Factories;
 use Faker\Factory as Faker;
 use Carbon\Carbon;
 use App\Models\Meeting;
+use App\Models\LecturerClassroom;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class MeetingFactory extends Factory
@@ -29,13 +30,14 @@ class MeetingFactory extends Factory
         $second = $faker->dateTimeBetween('07:00:00', '07:00:00')->format('s');
         $start_time = Carbon::createFromTime($hour, $minute, $second);
         $finish_time = Carbon::parse($start_time)->addHours(2);
+        $lecturer_classroom_ids = LecturerClassroom::select('id')->get();
 
         return [
-            'number_of_meeting' => $this->faker->numberBetween(1, 3),
+            'number_of_meeting' => $this->faker->numberBetween(1, 4),
             'date' => $this->faker->dateTimeThisYear()->format('Y-m-d'),
             'start_time' => $start_time,
             'finish_time' => $finish_time,
-            'lecturer_classroom_id' => 1,
+            'lecturer_classroom_id' => $this->faker->randomElement($lecturer_classroom_ids),
         ];
     }
 }

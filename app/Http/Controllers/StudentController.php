@@ -15,8 +15,8 @@ class StudentController extends Controller
      */
     public function index()
     {
-        $student = StudentResource::collection(Student::with('lecturer')
-                ->where('id', auth()->guard('api')->user()->id)
+        $student = StudentResource::collection(
+                Student::where('id', auth()->guard('api')->user()->id)
                 ->get());
 
         return $student;

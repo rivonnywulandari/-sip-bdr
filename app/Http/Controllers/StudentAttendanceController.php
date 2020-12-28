@@ -3,12 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\StudentAttendance;
-use App\Models\Student;
-use App\Models\Lecturer;
+use App\Models\StudentLocation;
 use App\Models\Krs;
 use App\Models\Meeting;
 use Illuminate\Http\Request;
-use Auth;
 use DB;
 use Carbon\Carbon;
 use App\Http\Resources\StudentAttendanceResource;
@@ -24,22 +22,16 @@ class StudentAttendanceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function showStudentAttendances($classroom_id)
-    {
-        $user_id = Auth::user()->id;
-        $lecturer_id = Lecturer::where('id' ,'>', 0)->pluck('id')->toArray();
-        
-        if(in_array($user_id, $lecturer_id)) {
-            $studentAttendance = StudentAttendanceResource::collection(StudentAttendance::with('meeting', 'krs', 'student_location')
-                            ->join('meetings', 'meetings.id', '=', 'student_attendances.meeting_id')
-                            ->join('lecturer_classrooms', 'lecturer_classrooms.id', '=', 'meetings.lecturer_classroom_id')
-                            ->where('lecturer_id', auth()->guard('api')->user()->id)
-                            ->where('classroom_id', $classroom_id)
-                            ->get());
+    public function showStudentAttendances($meeting_id)
+    {   
+        $studentAttendance = StudentAttendanceResource::collection(
+                        StudentAttendance::join('meetings', 'meetings.id', '=', 'student_attendances.meeting_id')
+                        ->join('lecturer_classrooms', 'lecturer_classrooms.id', '=', 'meetings.lecturer_classroom_id')
+                        ->where('lecturer_id', auth()->guard('api')->user()->id)
+                        ->where('meeting_id', $meeting_id)
+                        ->get());
 
-            return $studentAttendance;
-        }
-        else{}
+        return $studentAttendance;
     }
 
     /**
@@ -61,8 +53,6 @@ class StudentAttendanceController extends Controller
     public function store(Request $request)
     {
         $datetime = Carbon::now();
-        $user_id = Auth::user()->id;
-        $student_id = Student::where('id' ,'>', 0)->pluck('id')->toArray();
 
         $meeting_id = Meeting::where('start_time', '<=', $datetime->toTimeString())
                     ->where('finish_time', '>=', $datetime->toTimeString())
@@ -76,26 +66,28 @@ class StudentAttendanceController extends Controller
                 ->where('lecturer_classrooms.id', $meeting_id->lecturer_classroom_id)
                 ->value('krs.id');
 
-        $student_location_id = studentAttendance::where('student_id', $user_id)
+        $student_location_id = StudentLocation::where('student_id', auth()->guard('api')->user()->id)
                             ->where('submission_status', 'Disetujui')
                             ->value('id');
 
-        if(in_array($user_id, $student_id)) {
-            if($meeting_id && $krs_id && $student_location_id)
-            {
-                $studentAttendance = new StudentAttendance;
-                $studentAttendance->krs_id = $krs_id;
-                $studentAttendance->meeting_id = $meeting_id->id;
-                $studentAttendance->student_location_id = $student_location_id;
-                $studentAttendance->presence_status = $request->presence_status;
-                $studentAttendance->save();
-            }
-            
+        if($meeting_id && $krs_id && $student_location_id) {
+            $studentAttendance = new StudentAttendance;
+            $studentAttendance->krs_id = $krs_id;
+            $studentAttendance->meeting_id = $meeting_id->id;
+            $studentAttendance->student_location_id = $student_location_id;
+            $studentAttendance->presence_status = $request->presence_status;
+            $studentAttendance->save();
 
             return new StudentAttendanceResource($studentAttendance);
-        }
-        else {
-            return response()->json(['error' => 'Unauthorized'], 401);
+
+        } else {
+            $studentAttendance = new StudentAttendance;
+            $studentAttendance->krs_id = $krs_id;
+            $studentAttendance->meeting_id = $meeting_id->id;
+            $studentAttendance->presence_status = 'Absen';
+            $studentAttendance->save();
+
+            return new StudentAttendanceResource($studentAttendance);
         }
     }
 
@@ -130,18 +122,10 @@ class StudentAttendanceController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $user_id = Auth::user()->id;
-        $lecturer_id = Lecturer::where('id' ,'>', 0)->pluck('id')->toArray();
+        $studentAttendance = StudentAttendance::findOrFail($id);
+        $studentAttendance->update($request->only('presence_status'));
 
-        if(in_array($user_id, $lecturer_id)) {
-            $studentAttendance = StudentAttendance::findOrFail($id);
-            $studentAttendance->update($request->only('presence_status'));
-
-            return new StudentAttendanceResource($studentAttendance);
-        }
-        else {
-            return response()->json(['error' => 'Unauthorized'], 401);
-        }
+        return new StudentAttendanceResource($studentAttendance);
     }
 
     /**

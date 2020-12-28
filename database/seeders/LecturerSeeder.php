@@ -15,9 +15,6 @@ class LecturerSeeder extends Seeder
      */
     public function run()
     {
-        //Lecturer::truncate();
-        //User::truncate();
-
         $users = User::factory(15)->create();
         
         foreach($users as $user){

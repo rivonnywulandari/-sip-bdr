@@ -19,21 +19,11 @@ class LecturerClassroomController extends Controller
      */
     public function index()
     {
-        $lecturerClassroom = LecturerClassroomResource::collection(LecturerClassroom::with(['lecturer', 'classroom'])
-            ->where('lecturer_id', auth()->guard('api')->user()->id)
+        $lecturerClassroom = LecturerClassroomResource::collection(
+            LecturerClassroom::where('lecturer_id', auth()->guard('api')->user()->id)
             ->get());
 
         return $lecturerClassroom;
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -54,17 +44,6 @@ class LecturerClassroomController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show(LecturerClassroom $lecturerClassroom)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\LecturerClassroom  $lecturerClassroom
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(LecturerClassroom $lecturerClassroom)
     {
         //
     }

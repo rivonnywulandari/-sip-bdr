@@ -16,8 +16,6 @@ class StudentSeeder extends Seeder
      */
     public function run()
     {
-        //Student::truncate();
-        
         $users = User::factory(60)->create();
 
         foreach($users as $user){

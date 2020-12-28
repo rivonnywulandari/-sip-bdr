@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\StudentLocation;
 use App\Models\Student;
 use App\Models\Lecturer;
-use App\Models\StudentAttendance;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Schema;
 use Auth;
 use App\Http\Resources\StudentLocationResource;
 
@@ -22,30 +22,12 @@ class StudentLocationController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        $user_id = Auth::user()->id;
-        $student_id = Student::where('id' ,'>', 0)->pluck('id')->toArray();
-        
-        if(in_array($user_id, $student_id)) {
-            $studentLocation = StudentLocationResource::collection(StudentLocation::with('student')
-                            ->where('student_id', auth()->guard('api')->user()->id)
-                            ->get());
+    {   
+        $studentLocation = StudentLocationResource::collection(
+                        StudentLocation::where('student_id', auth()->guard('api')->user()->id)
+                        ->get());
 
-            return $studentLocation;
-        }
-        else{
-            //
-        }
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return $studentLocation;
     }
 
     /**
@@ -57,27 +39,41 @@ class StudentLocationController extends Controller
     public function store(Request $request)
     {
         $user_id = Auth::user()->id;
-        $student_id = Student::where('id' ,'>', 0)->pluck('id')->toArray();
 
-        if(in_array($user_id, $student_id)) {
-            $this->validate($request, [
-                'longitude' => 'required',
-                'latitude' => 'required',
-                'address' => 'required',
-            ]);
+        $this->validate($request, [
+            'longitude' => 'required',
+            'latitude' => 'required',
+            'address' => 'required',
+        ]);
 
-            $studentLocation = new StudentLocation;
-            $studentLocation->student_id = $user_id;
-            $studentLocation->longitude = $request->longitude;
-            $studentLocation->latitude = $request->latitude;
-            $studentLocation->address = $request->address;
-            $studentLocation->save();
+        $studentLocation = new StudentLocation;
+        $studentLocation->student_id = $user_id;
+        $studentLocation->longitude = $request->longitude;
+        $studentLocation->latitude = $request->latitude;
+        $studentLocation->address = $request->address;
+        $studentLocation->save();
 
-            return new StudentLocationResource($studentLocation);
-        }
-        else {
-            return response()->json(['error' => 'Unauthorized'], 401);
-        }
+        return new StudentLocationResource($studentLocation);
+    }
+
+    /**
+     * Display list of student location submissions.
+     *
+     * @param  \App\Models\Lecturer  $lecturer
+     * @return \Illuminate\Http\Response
+     */
+    public function showStudentSubmissions()
+    {
+        $user_id = Auth::user()->id;
+        $lecturer = Lecturer::findOrFail($user_id);
+        $studentLocation = $lecturer->student_location()
+                        ->where('submission_status', '!=', 'Disetujui')
+                        ->orWhereNull('submission_status')
+                        ->get();
+
+        $response['studentlocation'] = $studentLocation;
+        
+        return response()->json($response);
     }
 
     /**
@@ -93,17 +89,6 @@ class StudentLocationController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\StudentLocation  $studentLocation
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(StudentLocation $studentLocation)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -112,18 +97,10 @@ class StudentLocationController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $user_id = Auth::user()->id;
-        $lecturer_id = Lecturer::where('id' ,'>', 0)->pluck('id')->toArray();
+        $studentLocation = StudentLocation::findOrFail($id);
+        $studentLocation->update($request->only('submission_status'));
 
-        if(in_array($user_id, $lecturer_id)) {
-            $studentLocation = StudentLocation::findOrFail($id);
-            $studentLocation->update($request->only('submission_status'));
-
-            return new StudentLocationResource($studentLocation);
-        }
-        else {
-            return response()->json(['error' => 'Unauthorized'], 401);
-        }
+        return new StudentLocationResource($studentLocation);
     }
 
     /**
@@ -134,22 +111,11 @@ class StudentLocationController extends Controller
      */
     public function destroy($id)
     {
-        $user_id = Auth::user()->id;
-        $student_id = Student::where('id' ,'>', 0)->pluck('id')->toArray();
-        $student_attendance = StudentAttendance::where('id' ,'>', 0)->pluck('student_location_id')->toArray();
+        $studentLocation = StudentLocation::findOrFail($id);
 
-        if(in_array($user_id, $student_id)) {
-            if(in_array($id, $student_attendance)) {
-                return response()->json(['error' => 'Location cannot be deleted because it has been approved'], 422);
-            }
-            else {
-                $studentLocation = StudentLocation::findOrFail($id);
-                $studentLocation->delete();
-                return response()->json(['message'=>'Submission has successfully deleted']);
-            }
-        }
-        else {
-            return response()->json(['error' => 'Unauthorized'], 401);
-        }
+        Schema::disableForeignKeyConstraints();
+        $studentLocation->delete();
+        Schema::enableForeignKeyConstraints();
+        return response()->json(['message'=>'Submission has successfully deleted']);
     }
 }

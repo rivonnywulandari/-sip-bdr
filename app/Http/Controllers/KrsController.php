@@ -19,21 +19,11 @@ class KrsController extends Controller
      */
     public function index()
     {
-        $krs = KrsResource::collection(Krs::with(['student', 'classroom'])
-            ->where('student_id', auth()->guard('api')->user()->id)
+        $krs = KrsResource::collection(
+            Krs::where('student_id', auth()->guard('api')->user()->id)
             ->get());
 
         return $krs;
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -54,17 +44,6 @@ class KrsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show(Krs $krs)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Krs  $krs
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Krs $krs)
     {
         //
     }

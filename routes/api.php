@@ -31,27 +31,30 @@ Route::post('login', 'AuthController@login');
 Route::get('logout', 'AuthController@logout');
 Route::get('user', 'AuthController@getAuthUser');
 
-//Classroom Schedule
+// Classroom Schedule
 Route::apiResource('schedule', 'ClassroomScheduleController'); // for retrieving classroom schedule
 
 // Student Classroom
 Route::apiResource('student', 'StudentController');
 Route::apiResource('krs', 'KrsController'); //for retrieving student classrooms
-Route::apiResource('classroom', 'ClassroomController'); // for retrieving student classroom detail
 
 // Lecturer Classroom
-Route::apiResource('lecturer', 'LecturerController');
 Route::apiResource('lecturerclassroom','LecturerClassroomController'); // for retrieving lecturer classrooms
+
+// Classroom Detail
+Route::apiResource('classroom', 'ClassroomController'); // for retrieving classroom detail
 
 // Student Location Submission
 Route::apiResource('studentlocation', 'StudentLocationController');
-Route::get('studentsubmission/{lecturer}', 'LecturerController@showStudentLocations'); // for retrieving student location submissions
+Route::get('studentsubmission', 'StudentLocationController@showStudentSubmissions'); // for retrieving student location submissions
+
+// Meeting
+Route::apiResource('meeting', 'MeetingController')->except('index', 'store');
+Route::get('lecturermeetings/{id}', 'MeetingController@showLecturerMeetings');
+Route::get('studentmeetings/{id}', 'MeetingController@showStudentMeetings');
+Route::post('meeting/{id}', 'MeetingController@createMeeting');
 
 //Student Attendances
 Route::apiResource('studentattendance', 'StudentAttendanceController')->except('index');
-Route::get('classattendance/{classroom_id}', 'StudentAttendanceController@showStudentAttendances');
+Route::get('classattendance/{id}', 'StudentAttendanceController@showStudentAttendances');
 Route::get('attendance/{student}', 'StudentController@showAttendances');
-
-// Meeting
-Route::apiResource('meeting', 'MeetingController')->except('index');
-Route::get('meetings/{classroom}', 'ClassroomController@showMeetings');

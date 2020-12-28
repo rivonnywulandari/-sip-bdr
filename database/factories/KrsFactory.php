@@ -3,6 +3,8 @@
 namespace Database\Factories;
 
 use App\Models\Krs;
+use App\Models\Student;
+use App\Models\Classroom;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class KrsFactory extends Factory
@@ -21,9 +23,12 @@ class KrsFactory extends Factory
      */
     public function definition()
     {
+        $student_ids = Student::select('id')->get();
+        $classroom_ids = Classroom::select('id')->get();
+
         return [
-            'student_id' => 1,
-            'classroom_id' => $this->faker->numberBetween(1, 10),
+            'student_id' => $this->faker->randomElement($student_ids),
+            'classroom_id' => $this->faker->randomElement($classroom_ids),
         ];
     }
 }

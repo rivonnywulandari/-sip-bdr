@@ -3,6 +3,8 @@
 namespace Database\Factories;
 
 use App\Models\Classroom;
+use App\Models\Course;
+use App\Models\Period;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class ClassroomFactory extends Factory
@@ -21,10 +23,12 @@ class ClassroomFactory extends Factory
      */
     public function definition()
     {
+        $period_ids = Period::select('id')->get();
+
         return [
             'classroom_code' => $this->faker->randomElement($array = array ('A','B')),
             'course_id' => 1,
-            'period_id' => $this->faker->numberBetween(1, 6),
+            'period_id' => $this->faker->randomElement($period_ids),
         ];
     }
 }

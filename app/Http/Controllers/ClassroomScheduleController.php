@@ -19,9 +19,7 @@ class ClassroomScheduleController extends Controller
      */
     public function index()
     {
-        $classroomSchedule = ClassroomScheduleResource::collection(ClassroomSchedule::with('classroom')->get());
-
-        return $classroomSchedule;
+        //
     }
 
     /**

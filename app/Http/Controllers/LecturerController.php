@@ -15,10 +15,7 @@ class LecturerController extends Controller
      */
     public function index()
     {
-        $lecturer = LecturerResource::collection(Lecturer::where('id', auth()->guard('api')->user()->id)
-                ->get());
-
-        return $lecturer;
+        //
     }
 
     /**
@@ -51,24 +48,6 @@ class LecturerController extends Controller
     public function show(Lecturer $lecturer)
     {
         //
-    }
-
-    /**
-     * Display list of student location submissions.
-     *
-     * @param  \App\Models\Lecturer  $lecturer
-     * @return \Illuminate\Http\Response
-     */
-    public function showStudentLocations(Lecturer $lecturer)
-    {
-        $studentLocation = $lecturer->student_location()
-                        ->where('submission_status', '!=', 'Disetujui')
-                        ->orWhereNull('submission_status')
-                        ->get();
-
-        $response['studentlocation'] = $studentLocation;
-        
-        return response()->json($response);
     }
 
     /**

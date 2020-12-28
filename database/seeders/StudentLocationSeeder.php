@@ -15,9 +15,7 @@ class StudentLocationSeeder extends Seeder
      */
     public function run()
     {
-        //StudentLocation::truncate();
-        
-        $students = Student::where('id', '<=', '25')->get();
+        $students = Student::where('id', '<=', '45')->get();
 
         foreach($students as $student){
             StudentLocation::factory(1)->create(['student_id' => $student->id]);

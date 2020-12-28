@@ -19,7 +19,7 @@ class ClassroomSeeder extends Seeder
         //Classroom::truncate();
         //Course::truncate();
         
-        $courses = Course::factory(35)->create();
+        $courses = Course::factory(40)->create();
         Period::factory(6)->create();
 
         foreach($courses as $course){
