@@ -13,4 +13,8 @@ class Period extends Model
     public function classroom(){
         return $this->hasMany('App\Models\Classroom');
     }
+
+    public function getPeriodAttribute(){
+        return $this->year . ' ' . $this->semester;
+    }
 }

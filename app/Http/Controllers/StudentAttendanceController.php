@@ -12,11 +12,7 @@ use Carbon\Carbon;
 use App\Http\Resources\StudentAttendanceResource;
 
 class StudentAttendanceController extends Controller
-{
-    public function __construct() {
-        $this->middleware('auth');
-    }
-    
+{    
     /**
      * Display a listing of the resource.
      *

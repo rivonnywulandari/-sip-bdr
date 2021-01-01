@@ -13,4 +13,8 @@ class Course extends Model
     public function classroom(){
         return $this->hasMany('App\Models\Classroom');
     }
+
+    public function getCourseAttribute(){
+        return strtoupper($this->course_code) . ' ' . ucwords($this->name);
+    }
 }

@@ -9,6 +9,16 @@ class AuthController extends Controller
 {
     public $loginAfterSignUp = true;
 
+    /**
+     * Create a new AuthController instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth:api', ['except' => ['login']]);
+    }
+
     public function register(Request $request)
     {
       $user = User::create([
@@ -18,7 +28,7 @@ class AuthController extends Controller
         'email_verified_at' => now(),
       ]);
 
-      $token = auth()->login($user);
+      $token = auth()->guard('api')->login($user);
 
       return $this->respondWithToken($token);
     }
@@ -27,7 +37,9 @@ class AuthController extends Controller
     {
       $credentials = $request->only(['username', 'password']);
 
-      if (!$token = auth()->attempt($credentials)) {
+      $token = auth()->guard('api')->attempt($credentials);
+
+      if (!$token) {
         return response()->json(['error' => 'Unauthorized'], 401);
       }
 
@@ -41,7 +53,7 @@ class AuthController extends Controller
 
     public function logout()
     {
-        auth()->logout();
+        auth()->guard('api')->logout();
         return response()->json(['message'=>'Successfully logged out']);
     }
     
@@ -50,7 +62,7 @@ class AuthController extends Controller
       return response()->json([
         'access_token' => $token,
         'token_type' => 'bearer',
-        'expires_in' => auth()->factory()->getTTL() * 360
+        'expires_in' => auth('api')->factory()->getTTL() * 360,
       ]);
     }
 }

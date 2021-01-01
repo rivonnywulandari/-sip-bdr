@@ -7,15 +7,10 @@ use App\Models\Student;
 use App\Models\Lecturer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
-use Auth;
 use App\Http\Resources\StudentLocationResource;
 
 class StudentLocationController extends Controller
-{
-    public function __construct() {
-        $this->middleware('auth');
-    }
-    
+{    
     /**
      * Display a listing of the resource.
      *
@@ -38,7 +33,7 @@ class StudentLocationController extends Controller
      */
     public function store(Request $request)
     {
-        $user_id = Auth::user()->id;
+        $user_id = auth()->guard('api')->user()->id;
 
         $this->validate($request, [
             'longitude' => 'required',
@@ -64,7 +59,7 @@ class StudentLocationController extends Controller
      */
     public function showStudentSubmissions()
     {
-        $user_id = Auth::user()->id;
+        $user_id = auth()->guard('api')->user()->id;
         $lecturer = Lecturer::findOrFail($user_id);
         $studentLocation = $lecturer->student_location()
                         ->where('submission_status', '!=', 'Disetujui')

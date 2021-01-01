@@ -8,10 +8,6 @@ use App\Http\Resources\KrsResource;
 
 class KrsController extends Controller
 {
-    public function __construct() {
-        $this->middleware('auth');
-    }
-    
     /**
      * Display a listing of the resource.
      *
