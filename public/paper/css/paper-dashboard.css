@@ -2684,6 +2684,26 @@ a[data-toggle="collapse"][aria-expanded="true"] .caret,
   width: 17px;
 }
 
+.floating-btn {
+  display: block;
+  width: 60px;
+  height: 60px;
+  line-height: 60px;
+  text-align: center;
+  color: white;
+  font-size: 25px;
+  font-weight: bold;
+  border-radius: 50%;
+  -webkit-border-radius: 50%;
+  text-decoration: none;
+  transition: ease all 0.3s;
+  position: fixed;
+  right: 30px;
+  bottom:30px;
+}
+
+.floating-btn:hover{background: rgb(143, 143, 252)}
+
 .caret {
   display: inline-block;
   width: 0;

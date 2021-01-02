@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\StudentAttendance;
-use App\Models\StudentLocation;
+use App\Models\Meeting;
 use Illuminate\Database\Seeder;
 
 class StudentAttendanceSeeder extends Seeder
@@ -15,10 +15,12 @@ class StudentAttendanceSeeder extends Seeder
      */
     public function run()
     {
-        $student_locations = StudentLocation::all();
+        // $meetings = Meeting::all();
 
-        foreach($student_locations as $student_location){
-            StudentAttendance::factory(6)->create(['student_location_id' => $student_location->id]);
-        }
+        // foreach($meetings as $meeting){
+        //     StudentAttendance::factory(20)->create(['meeting_id' => $meeting->id]);
+        // }
+
+        StudentAttendance::factory()->count(25)->create();
     }
 }

@@ -31,7 +31,7 @@ Route::get('dashboard/classrooms/{id?}', 'App\Http\Controllers\HomeController@cl
 Route::post('dashboard', 'App\Http\Controllers\HomeController@store')->name('dashboard.store');
 
 //Routes for classroom detail page
-Route::get('classroom/{id}', 'App\Http\Controllers\ClassroomController@showDetail')->name('classroom.show');
+Route::get('classroom/{id}/{action}', 'App\Http\Controllers\ClassroomController@showDetail')->name('classroom.show');
 
 Route::group(['middleware' => 'auth'], function () {
 	Route::resource('user', 'App\Http\Controllers\UserController', ['except' => ['show']]);

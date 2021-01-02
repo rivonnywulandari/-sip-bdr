@@ -59,6 +59,6 @@ class HomeController extends Controller
         $id = $request->input('classroom');
         $classroom = Classroom::findOrFail($id);
 
-        return redirect()->route('classroom.show', [$classroom->id]);
+        return redirect()->route('classroom.show', [$classroom->id, 'show']);
     }
 }

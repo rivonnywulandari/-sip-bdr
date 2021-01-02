@@ -59,35 +59,35 @@ class ClassroomController extends Controller
      * @param  \App\Models\Classroom  $classroom
      * @return \Illuminate\Http\Response
      */
-    public function showDetail($id)
+    public function showDetail($id, $action=null)
     {
         $classroom = Classroom::findOrFail($id);
         $lecturers = LecturerClassroom::where('classroom_id', $id)->get();
-        $students = Krs::where('classroom_id', $id)->get();
-        $attendances = StudentAttendance::join('krs', 'krs.id', 'student_attendances.krs_id')
-                    ->where('classroom_id', $id)
-                    ->get();
+        $dates = StudentAttendance::join('meetings', 'meetings.id', 'student_attendances.meeting_id')
+                ->join('krs', 'krs.id', 'student_attendances.krs_id')
+                ->where('classroom_id', $id)
+                ->groupBy('meetings.date')
+                ->get();
 
         $s_attendances = StudentAttendance::join('meetings', 'meetings.id', 'student_attendances.meeting_id')
-                    ->join('krs', 'krs.id', 'student_attendances.krs_id')
-                    ->join('students', 'students.id', 'krs.student_id')
-                    ->select('student_attendances.id as att_id', 'presence_status', 'students.name as student_name', 'students.nim', 'meetings.date')
-                    ->where('classroom_id', $id)
-                    ->groupBy('students.name', 'meetings.date')
-                    ->get();
-        
-                    //dd($s_attendances);
+                ->join('krs', 'krs.id', 'student_attendances.krs_id')
+                ->join('students', 'students.id', 'krs.student_id')
+                ->select('student_attendances.id as att_id', 'presence_status', 'students.name as student_name', 'students.nim', 'meetings.date')
+                ->where('classroom_id', $id)
+                ->groupBy('meetings.date', 'students.name')
+                ->get();
         
         $presence = [];
         $students_temp = [];
         $date_temp = [];
 
-        foreach($attendances as $attendance){
-            $date_temp[] = ['id' => $attendance->id, 'date' => $attendance->meeting->date];
+        foreach ($dates as  $date) {
+            $date_temp[] = ['id' => $date->att_id, 'date' => $date->date];
         }
 
         foreach ($s_attendances as  $s_attendance) {
             $temp = null;
+
             if (!in_array($s_attendance->nim, $students_temp)) {
                 array_push($students_temp, $s_attendance->nim);
                   foreach ($s_attendances as $s_attendance_2) {
@@ -108,8 +108,13 @@ class ClassroomController extends Controller
                 array_push($presence, $temp);   
             }
         }
-            
-        return view('classroom.index', compact('classroom', 'lecturers', 'students', 'attendances', 's_attendances', 'presence', 'date_temp'));
+        
+        if($action == 'print') {
+            return view('classroom.print', compact('classroom', 'lecturers', 's_attendances', 'presence', 'date_temp'));
+        } 
+        else {
+            return view('classroom.index', compact('classroom', 'lecturers', 's_attendances', 'presence', 'date_temp'));
+        }
     }
 
     /**

@@ -15,6 +15,6 @@ class Period extends Model
     }
 
     public function getPeriodAttribute(){
-        return $this->year . ' ' . $this->semester;
+        return $this->semester . ' ' . $this->year;
     }
 }

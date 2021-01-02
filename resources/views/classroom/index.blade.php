@@ -9,11 +9,11 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <h5 class="card-title">Detail Kelas</h5>
+                        <h5 class="card-title">{{ ucwords($classroom->course->name) }}</h5>
                     </div>
                     <div class="card-body">
                         <div class="form-group row">
-                            <p class="col-sm-2 text-primary"><strong>Nama Mata Kuliah</strong></p>
+                            <p class="col-sm-2 text-primary"><strong>Kode/Mata Kuliah</strong></p>
                             <p class="col-sm-5">{{ $classroom->course->course }}</p>
                             <p class="col-sm-2 text-primary"><strong>Periode</strong></p>
                             <p class="col-sm-3">{{ $classroom->period->period }}</p>
@@ -34,16 +34,17 @@
                             @endforeach
                         </div>
 
+                        {{-- LIST OF ATTENDEES --}}
                         <div class="table-responsive">
                             <table class="table table-hover">
                                 <thead class=" text-primary">
                                 <tr>
                                     <th scope="col">No</th>
-                                    <th scope="col">Nama</th>
                                     <th scope="col">NIM</th>
-                                    @foreach($attendances as $attendance)
+                                    <th scope="col">Nama</th>
+                                    @foreach($date_temp as $temp)
                                     <?php
-                                        $date = explode("-", $attendance->meeting->date);
+                                        $date = explode("-", $temp['date']);
                                         $date = $date[2]."/".$date[1];
                                     ?>
                                     <th scope="col">{{ $date }}</th>
@@ -55,8 +56,8 @@
                                 @foreach($presence as $p)
                                 <tr>
                                     <td> {{ $loop->iteration }} </th>
-                                    <td>{{ $p['student_name'] }}</td>
                                     <td>{{ $p['nim'] }}</td>
+                                    <td>{{ $p['student_name'] }}</td>
                                     @foreach ($p['desc'] as $key => $item)
                                         @foreach ($p['desc'] as $i)
 
@@ -72,6 +73,17 @@
                                 @endforeach
                                 </tbody>
                             </table>    
+                        </div>
+                        
+                        {{-- PRINT BUTTON --}}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <a class="floating-btn btn-primary" href="{{ route('classroom.show', ['id' => Request::segment(2), 'action' => 'print']) }}">
+                                        <i class="fa fa-print"></i>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

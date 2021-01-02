@@ -4,7 +4,7 @@ namespace Database\Factories;
 
 use App\Models\StudentAttendance;
 use App\Models\Krs;
-use App\Models\Meeting;
+use App\Models\StudentLocation;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class StudentAttendanceFactory extends Factory
@@ -24,12 +24,17 @@ class StudentAttendanceFactory extends Factory
     public function definition()
     {
         $krs_ids = Krs::select('id')->get();
-        $meeting_ids = Meeting::select('id')->get();
+        //$meeting_ids = Meeting::select('id')->get();
+        $student_location_ids = StudentLocation::join('students', 'students.id', 'student_locations.student_id')
+                        ->join('krs', 'students.id', 'krs.student_id')
+                        ->select('student_locations.id')
+                        ->where('krs.classroom_id', '=', 3)
+                        ->get();
 
         return [
-            'krs_id' => $this->faker->randomElement($krs_ids),
-            'meeting_id' => $this->faker->randomElement($meeting_ids),
-            'student_location_id' => 1,
+            'krs_id' => $this->faker->unique()->numberBetween(121, 145),
+            'meeting_id' => 14,
+            'student_location_id' => $this->faker->randomElement($student_location_ids),
             'presence_status' => $this->faker->randomElement($array = array ('Hadir','Absen','Izin')),
         ];
     }

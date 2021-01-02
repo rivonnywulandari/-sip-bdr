@@ -41,7 +41,7 @@ class LoginController extends Controller
         
             Auth::login($user, $remember_me);
     
-            return redirect(route('home'));
+            return redirect(route('dashboard'));
         }
     }
 

@@ -15,6 +15,6 @@ class Course extends Model
     }
 
     public function getCourseAttribute(){
-        return strtoupper($this->course_code) . ' ' . ucwords($this->name);
+        return strtoupper($this->course_code) . '/' . ucwords($this->name);
     }
 }

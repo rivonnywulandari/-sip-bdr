@@ -1,12 +1,12 @@
 <div class="sidebar" data-color="white" data-active-color="danger">
     <div class="logo">
-        <a href="http://www.creative-tim.com" class="simple-text logo-mini">
+        <a href="http://si.fti.unand.ac.id/" class="simple-text logo-mini">
             <div class="logo-image-small">
-                <img src="{{ asset('paper') }}/img/logo-small.png">
+                <img src="{{ asset('paper') }}/img/favicon.png">
             </div>
         </a>
-        <a href="http://www.creative-tim.com" class="simple-text logo-normal">
-            {{ __('Creative Tim') }}
+        <a href="http://si.fti.unand.ac.id/" class="simple-text logo-normal">
+            {{ __('SIP JSI UNAND') }}
         </a>
     </div>
     <div class="sidebar-wrapper">
@@ -36,28 +36,10 @@
                     </ul>
                 </div>
             </li>
-            <li class="{{ $elementActive == 'icons' ? 'active' : '' }}">
-                <a href="{{ route('page.index', 'icons') }}">
-                    <i class="nc-icon nc-diamond"></i>
-                    <p>{{ __('Icons') }}</p>
-                </a>
-            </li>
             <li class="{{ $elementActive == 'notifications' ? 'active' : '' }}">
                 <a href="{{ route('page.index', 'notifications') }}">
                     <i class="nc-icon nc-bell-55"></i>
                     <p>{{ __('Notifications') }}</p>
-                </a>
-            </li>
-            <li class="{{ $elementActive == 'tables' ? 'active' : '' }}">
-                <a href="{{ route('page.index', 'tables') }}">
-                    <i class="nc-icon nc-tile-56"></i>
-                    <p>{{ __('Table List') }}</p>
-                </a>
-            </li>
-            <li class="{{ $elementActive == 'typography' ? 'active' : '' }}">
-                <a href="{{ route('page.index', 'typography') }}">
-                    <i class="nc-icon nc-caps-small"></i>
-                    <p>{{ __('Typography') }}</p>
                 </a>
             </li>
         </ul>

@@ -48,7 +48,6 @@ The above copyright notice and this permission notice shall be included in all c
     
     @auth()
         @include('layouts.page_templates.auth')
-        @include('layouts.navbars.fixed-plugin')
     @endauth
     
     @guest
