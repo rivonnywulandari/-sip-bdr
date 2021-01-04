@@ -24,7 +24,6 @@ class StudentAttendanceFactory extends Factory
     public function definition()
     {
         $krs_ids = Krs::select('id')->get();
-        //$meeting_ids = Meeting::select('id')->get();
         $student_location_ids = StudentLocation::join('students', 'students.id', 'student_locations.student_id')
                         ->join('krs', 'students.id', 'krs.student_id')
                         ->select('student_locations.id')
@@ -32,8 +31,8 @@ class StudentAttendanceFactory extends Factory
                         ->get();
 
         return [
-            'krs_id' => $this->faker->unique()->numberBetween(121, 145),
-            'meeting_id' => 14,
+            'krs_id' => $this->faker->unique()->numberBetween(108, 120),
+            'meeting_id' => 85,
             'student_location_id' => $this->faker->randomElement($student_location_ids),
             'presence_status' => $this->faker->randomElement($array = array ('Hadir','Absen','Izin')),
         ];

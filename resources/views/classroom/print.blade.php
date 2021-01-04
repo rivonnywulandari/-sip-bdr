@@ -92,8 +92,8 @@
     }
 
     img {
-        width: 65px;
-        height: 65px;
+        width: 60px;
+        height: 60px;
         float: left;
     }
 
@@ -118,6 +118,10 @@
         border-collapse:collapse;
         padding: 5px;
         margin-top: 10px;
+    }
+
+    .real-table th {
+        background-color: #D3D3D3
     }
 
 </style>

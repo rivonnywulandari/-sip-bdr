@@ -35,13 +35,16 @@ class LoginController extends Controller
         ];
 
         $remember_me  = ( !empty( $request->remember_me ) )? TRUE : FALSE;
-    
+
         if(Auth::attempt($credentials)){
             $user = User::where(["username" => $credentials['username']])->first();
-        
+
             Auth::login($user, $remember_me);
-    
+
             return redirect(route('dashboard'));
+        } 
+        else {
+            return redirect()->back()->withErrors('Incorrect username or password.');
         }
     }
 

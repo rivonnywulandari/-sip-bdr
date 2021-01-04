@@ -79,7 +79,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="row">
-                                    <a class="floating-btn btn-primary" href="{{ route('classroom.show', ['id' => Request::segment(2), 'action' => 'print']) }}">
+                                    <a class="floating-btn btn-primary" target="blank" href="{{ route('classroom.show', ['id' => Request::segment(2), 'action' => 'print']) }}">
                                         <i class="fa fa-print"></i>
                                     </a>
                                 </div>

@@ -7,6 +7,17 @@
     <div class="content">
         <div class="container">
             <div class="col-lg-4 col-md-6 ml-auto mr-auto">
+                @if ($errors->any())
+                    <div class="alert alert-danger alert-dismissible fade show">
+                        {{ $errors->first() }}
+                        <button type="button" aria-hidden="true" class="close" data-dismiss="alert"
+                            aria-label="Close">
+                            <i class="nc-icon nc-simple-remove"></i>
+                        </button>
+                    </div>
+                @endif
+            </div>
+            <div class="col-lg-4 col-md-6 ml-auto mr-auto">
                 <form class="form" method="POST" action="{{ route('login-verify') }}">
                     @csrf
                     <div class="card card-login">

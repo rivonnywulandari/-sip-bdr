@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
             // LecturerClassroomSeeder::class,
             // StudentLocationSeeder::class,
             // MeetingSeeder::class,
-            StudentAttendanceSeeder::class,
+            // StudentAttendanceSeeder::class,
         ]);
     }
 }

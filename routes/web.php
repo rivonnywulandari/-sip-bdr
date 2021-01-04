@@ -13,33 +13,25 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-/*
-Route::get('/', function () {
-    return view('welcome');
-});
-*/
-
-Route::get('/', 'App\Http\Controllers\HomeController@index');
-
 // Routes for authentication
 Auth::routes();
 Route::post('login/verify', 'App\Http\Controllers\Auth\LoginController@verify')->name('login-verify');
 
-// Routes for Home page
-Route::get('dashboard', 'App\Http\Controllers\HomeController@index')->name('dashboard');
-Route::get('dashboard/classrooms/{id?}', 'App\Http\Controllers\HomeController@classrooms')->name('select-classroom');
-Route::post('dashboard', 'App\Http\Controllers\HomeController@store')->name('dashboard.store');
+Route::group(['middleware' => 'admin'], function () {
+	// Routes for Home page
+	Route::get('/', 'App\Http\Controllers\HomeController@index');
+	Route::get('dashboard', 'App\Http\Controllers\HomeController@index')->name('dashboard');
+	Route::get('dashboard/classrooms/{id?}', 'App\Http\Controllers\HomeController@classrooms')->name('select-classroom');
+	Route::post('dashboard', 'App\Http\Controllers\HomeController@store')->name('dashboard.store');
 
-//Routes for classroom detail page
-Route::get('classroom/{id}/{action}', 'App\Http\Controllers\ClassroomController@showDetail')->name('classroom.show');
+	// Routes for classroom detail page
+	Route::get('classroom/{id}/{action}', 'App\Http\Controllers\ClassroomController@showDetail')->name('classroom.show');
 
-Route::group(['middleware' => 'auth'], function () {
-	Route::resource('user', 'App\Http\Controllers\UserController', ['except' => ['show']]);
+	// Routes for profile page
 	Route::get('profile', ['as' => 'profile.edit', 'uses' => 'App\Http\Controllers\ProfileController@edit']);
 	Route::put('profile', ['as' => 'profile.update', 'uses' => 'App\Http\Controllers\ProfileController@update']);
 	Route::put('profile/password', ['as' => 'profile.password', 'uses' => 'App\Http\Controllers\ProfileController@password']);
-});
 
-Route::group(['middleware' => 'auth'], function () {
+	// Routes for pages
 	Route::get('{page}', ['as' => 'page.index', 'uses' => 'App\Http\Controllers\PageController@index']);
 });
