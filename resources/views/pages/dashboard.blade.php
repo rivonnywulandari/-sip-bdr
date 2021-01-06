@@ -9,7 +9,7 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <h5 class="card-title">Dashboard</h5>
+                        <h5 class="card-title">{{ __('Dashboard') }}</h5>
                     </div>
                     <div class="card-body">
                         <form class="form" method="POST" action="{{ route('dashboard.store') }}">
@@ -49,12 +49,6 @@
 
 @push('scripts')
     <script>
-        // $.ajaxSetup({
-        //     headers: {
-        //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        //     }
-        // });
-
         jQuery(document).ready(function () {
             jQuery('select[name="period"]').on('change', function(){
                var period_id = jQuery(this).val();

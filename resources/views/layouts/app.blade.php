@@ -59,8 +59,6 @@ The above copyright notice and this permission notice shall be included in all c
     <script src="{{ asset('paper') }}/js/core/popper.min.js"></script>
     <script src="{{ asset('paper') }}/js/core/bootstrap.min.js"></script>
     <script src="{{ asset('paper') }}/js/plugins/perfect-scrollbar.jquery.min.js"></script>
-    <!-- Chart JS -->
-    <script src="{{ asset('paper') }}/js/plugins/chartjs.min.js"></script>
     <!--  Notifications Plugin    -->
     <script src="{{ asset('paper') }}/js/plugins/bootstrap-notify.js"></script>
     <!-- Control Center for Now Ui Dashboard: parallax effects, scripts for the example pages etc -->

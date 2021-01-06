@@ -34,12 +34,10 @@ class LoginController extends Controller
             'password' => $request->password,
         ];
 
-        $remember_me  = ( !empty( $request->remember_me ) )? TRUE : FALSE;
-
         if(Auth::attempt($credentials)){
             $user = User::where(["username" => $credentials['username']])->first();
 
-            Auth::login($user, $remember_me);
+            Auth::login($user);
 
             return redirect(route('dashboard'));
         } 

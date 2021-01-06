@@ -63,7 +63,13 @@
 
                                         @if ($date_temp[$key]['date'] == $i['date'])
 
-                                            <td>{{ $item['presence_status'] }}</td>
+                                        @if ($item['presence_status'] == 'Hadir')
+                                        <td class="text-center"><p class="text-success" data-toggle="tooltip" title="Hadir">v</p></td>
+                                        @elseif ($item['presence_status'] == 'Izin')
+                                        <td class="text-center"><p class="text-warning" data-toggle="tooltip" title="Izin">i</p></td>
+                                        @else
+                                        <td class="text-center"><p class="text-danger" data-toggle="tooltip" title="Absen">x</p></td>
+                                        @endif
 
                                         @endif
 
@@ -91,3 +97,11 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+    <script>
+        $( document ).ready(function() {
+            $('[data-toggle="tooltip"]').tooltip({'placement': 'bottom'});
+        });
+    </script>
+@endpush

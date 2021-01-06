@@ -33,11 +33,11 @@ class MeetingFactory extends Factory
         $lecturer_classroom_ids = LecturerClassroom::select('id')->get();
 
         return [
-            'number_of_meeting' => $this->faker->unique()->numberBetween(1, 6),
+            'number_of_meeting' => $this->faker->unique()->numberBetween(17, 30),
             'date' => $this->faker->unique()->dateTimeThisYear()->format('Y-m-d'),
             'start_time' => $start_time,
             'finish_time' => $finish_time,
-            'lecturer_classroom_id' => $this->faker->randomElement($array = array (46,49)),
+            'lecturer_classroom_id' => $this->faker->randomElement($array = array (30,20)),
         ];
     }
 }

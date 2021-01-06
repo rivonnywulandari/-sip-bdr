@@ -25,9 +25,9 @@ class PasswordRequest extends FormRequest
     public function rules()
     {
         return [
-            'old_password' => ['required', 'min:6', new CurrentPasswordCheckRule],
-            'password' => ['required', 'min:6', 'confirmed', 'different:old_password'],
-            'password_confirmation' => ['required', 'min:6'],
+            'old_password' => ['required', new CurrentPasswordCheckRule],
+            'password' => ['required', 'confirmed', 'different:old_password'],
+            'password_confirmation' => ['required'],
         ];
     }
 

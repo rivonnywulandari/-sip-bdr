@@ -35,14 +35,12 @@
                                     </span>
                                 </div>
                                 <input class="form-control{{ $errors->has('username') ? ' is-invalid' : '' }}" placeholder="{{ __('Username') }}" type="text" name="username" value="{{ old('username') }}" required autofocus>
-                                
                                 @if ($errors->has('username'))
                                     <span class="invalid-feedback" style="display: block;" role="alert">
                                         <strong>{{ $errors->first('username') }}</strong>
                                     </span>
                                 @endif
                             </div>
-
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">
@@ -56,16 +54,6 @@
                                         <strong>{{ $errors->first('password') }}</strong>
                                     </span>
                                 @endif
-                            </div>
-
-                            <div class="form-group">
-                                <div class="form-check">
-                                     <label class="form-check-label">
-                                        <input class="form-check-input" name="remember" type="checkbox" value="" {{ old('remember') ? 'checked' : '' }}>
-                                        <span class="form-check-sign"></span>
-                                        {{ __('Remember me') }}
-                                    </label>
-                                </div>
                             </div>
                         </div>
 

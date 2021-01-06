@@ -29,8 +29,7 @@ Route::group(['middleware' => 'admin'], function () {
 
 	// Routes for profile page
 	Route::get('profile', ['as' => 'profile.edit', 'uses' => 'App\Http\Controllers\ProfileController@edit']);
-	Route::put('profile', ['as' => 'profile.update', 'uses' => 'App\Http\Controllers\ProfileController@update']);
-	Route::put('profile/password', ['as' => 'profile.password', 'uses' => 'App\Http\Controllers\ProfileController@password']);
+	Route::put('profile', ['as' => 'profile.password', 'uses' => 'App\Http\Controllers\ProfileController@password']);
 
 	// Routes for pages
 	Route::get('{page}', ['as' => 'page.index', 'uses' => 'App\Http\Controllers\PageController@index']);

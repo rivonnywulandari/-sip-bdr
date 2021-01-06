@@ -31,8 +31,8 @@ class StudentAttendanceFactory extends Factory
                         ->get();
 
         return [
-            'krs_id' => $this->faker->unique()->numberBetween(108, 120),
-            'meeting_id' => 85,
+            'krs_id' => $this->faker->unique()->numberBetween(121, 145),
+            'meeting_id' => 99,
             'student_location_id' => $this->faker->randomElement($student_location_ids),
             'presence_status' => $this->faker->randomElement($array = array ('Hadir','Absen','Izin')),
         ];
