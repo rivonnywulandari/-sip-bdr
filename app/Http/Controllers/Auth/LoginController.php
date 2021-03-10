@@ -39,7 +39,7 @@ class LoginController extends Controller
 
             Auth::login($user);
 
-            return redirect(route('dashboard'));
+            return redirect(route('home'));
         } 
         else {
             return redirect()->back()->withErrors('Incorrect username or password.');

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\LecturerClassroom;
 use Illuminate\Http\Request;
 use App\Http\Resources\LecturerClassroomResource;
+use DB;
 
 class LecturerClassroomController extends Controller
 {    
@@ -15,11 +16,22 @@ class LecturerClassroomController extends Controller
      */
     public function index()
     {
-        $lecturerClassroom = LecturerClassroomResource::collection(
-            LecturerClassroom::where('lecturer_id', auth()->guard('api')->user()->id)
-            ->get());
+        $lecturerClassroom = LecturerClassroom::join('classrooms','classrooms.id','=','lecturer_classrooms.classroom_id')
+            ->join('classroom_schedules','classroom_schedules.classroom_id','=','classrooms.id')
+            ->join('courses', 'courses.id', '=', 'classrooms.course_id')
+            ->select('lecturer_classrooms.id', 'classrooms.course_id', 'classrooms.classroom_code', DB::raw('courses.name as course_name'), 
+            'courses.sks', 'classroom_schedules.scheduled_day', 'classroom_schedules.start_time', 'classroom_schedules.finish_time', 'classroom_schedules.classroom_id')
+            ->where('lecturer_id', auth()->guard('api')->user()->id)
+            ->get();
 
-        return $lecturerClassroom;
+        // $lecturers = LecturerClassroom::join('lecturers','lecturers.id','=','lecturer_classrooms.lecturer_id')
+        //     ->select('lecturer_classrooms.id', 'lecturers.*')
+        //     ->get();
+            
+        $response['lecturerclassrooms'] = $lecturerClassroom;
+        //$response['lecturers'] = $lecturers;
+        
+        return response()->json($response);
     }
 
     /**

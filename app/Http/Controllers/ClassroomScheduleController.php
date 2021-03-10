@@ -47,8 +47,7 @@ class ClassroomScheduleController extends Controller
      */
     public function show($id)
     {
-        $classroomSchedule = ClassroomSchedule::findOrFail($id);
-        return new ClassroomScheduleResource($classroomSchedule);
+        //
     }
 
     /**

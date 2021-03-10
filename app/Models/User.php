@@ -52,10 +52,10 @@ class User extends Authenticatable implements JWTSubject
     }
     
     public function student(){
-        return $this->hasOne('App\Models\Student');
+        return $this->hasOne('App\Models\Student', 'id');
     }
 
     public function lecturer(){
-        return $this->hasOne('App\Models\Lecturer');
+        return $this->hasOne('App\Models\Lecturer', 'id');
     }
 }

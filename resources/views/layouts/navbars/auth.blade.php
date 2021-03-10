@@ -11,10 +11,10 @@
     </div>
     <div class="sidebar-wrapper">
         <ul class="nav">
-            <li class="{{ $elementActive == 'dashboard' ? 'active' : '' }}">
-                <a href="{{ route('page.index', 'dashboard') }}">
+            <li class="{{ $elementActive == 'home' ? 'active' : '' }}">
+                <a href="{{ route('page.index', 'home') }}">
                     <i class="nc-icon nc-bank"></i>
-                    <p>{{ __('Dashboard') }}</p>
+                    <p>{{ __('Home') }}</p>
                 </a>
             </li>
             <li class="{{ $elementActive == 'profile' ? 'active' : '' }}">

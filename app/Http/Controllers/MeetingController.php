@@ -16,12 +16,8 @@ class MeetingController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function createMeeting(Request $request, $classroom_id)
+    public function createMeeting(Request $request, $lecturer_classroom_id)
     {
-        $lecturer_classroom_id = LecturerClassroom::where('lecturer_id', auth()->guard('api')->user()->id)
-                                ->where('classroom_id', $classroom_id)
-                                ->value('id');
-
         $this->validate($request, [
             'number_of_meeting' => 'required',
             'date' => 'required',
@@ -46,12 +42,8 @@ class MeetingController extends Controller
      * @param  \App\Models\Lecturer  $lecturer
      * @return \Illuminate\Http\Response
      */
-    public function showLecturerMeetings($classroom_id)
+    public function showLecturerMeetings($lecturer_classroom_id)
     {
-        $lecturer_classroom_id = LecturerClassroom::where('lecturer_id', auth()->guard('api')->user()->id)
-                    ->where('classroom_id', $classroom_id)
-                    ->value('id');
-
         $classroom = LecturerClassroom::findOrFail($lecturer_classroom_id);
 
         $meetings = $classroom->meeting()->get();
@@ -81,17 +73,6 @@ class MeetingController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Meeting  $meeting
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Meeting $meeting)
-    {
-        return new MeetingResource($meeting);
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -111,8 +92,15 @@ class MeetingController extends Controller
      * @param  \App\Models\Meeting  $meeting
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Meeting $meeting)
+    public function destroy($id)
     {
-        //
+        $meeting = Meeting::findOrFail($id);
+
+        $meeting->delete();
+        return response()->json(['message'=>'Meeting has successfully deleted']);
+
+        if (!$meeting->delete()) {
+            return response()->json(['error'=>'Meeting cannot be deleted']);
+        }
     }
 }

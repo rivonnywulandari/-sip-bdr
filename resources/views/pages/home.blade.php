@@ -1,6 +1,6 @@
 @extends('layouts.app', [
     'class' => '',
-    'elementActive' => 'dashboard'
+    'elementActive' => 'home'
 ])
 
 @section('content')
@@ -9,10 +9,10 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <h5 class="card-title">{{ __('Dashboard') }}</h5>
+                        <h5 class="card-title">{{ __('Home') }}</h5>
                     </div>
                     <div class="card-body">
-                        <form class="form" method="POST" action="{{ route('dashboard.store') }}">
+                        <form class="form" method="POST" action="{{ route('home.store') }}">
                             @csrf
 
                             <div class="form-group row">
@@ -55,7 +55,7 @@
                if(period_id)
                {
                   jQuery.ajax({
-                     url : 'dashboard/classrooms/' +period_id,
+                     url : 'home/classrooms/' +period_id,
                      type : "GET",
                      dataType : "json",
                      success:function(data)

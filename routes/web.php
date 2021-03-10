@@ -20,9 +20,9 @@ Route::post('login/verify', 'App\Http\Controllers\Auth\LoginController@verify')-
 Route::group(['middleware' => 'admin'], function () {
 	// Routes for Home page
 	Route::get('/', 'App\Http\Controllers\HomeController@index');
-	Route::get('dashboard', 'App\Http\Controllers\HomeController@index')->name('dashboard');
-	Route::get('dashboard/classrooms/{id?}', 'App\Http\Controllers\HomeController@classrooms')->name('select-classroom');
-	Route::post('dashboard', 'App\Http\Controllers\HomeController@store')->name('dashboard.store');
+	Route::get('home', 'App\Http\Controllers\HomeController@index')->name('home');
+	Route::get('home/classrooms/{id?}', 'App\Http\Controllers\HomeController@classrooms')->name('select-classroom');
+	Route::post('home', 'App\Http\Controllers\HomeController@store')->name('home.store');
 
 	// Routes for classroom detail page
 	Route::get('classroom/{id}/{action}', 'App\Http\Controllers\ClassroomController@showDetail')->name('classroom.show');

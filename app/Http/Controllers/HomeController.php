@@ -21,7 +21,7 @@ class HomeController extends Controller
     }
 
     /**
-     * Show the application dashboard.
+     * Show the application home.
      *
      * @return \Illuminate\View\View
      */
@@ -29,7 +29,7 @@ class HomeController extends Controller
     {
         $periods = Period::all()->pluck('period', 'id');
 
-        return view('pages.dashboard', compact('periods'));
+        return view('pages.home', compact('periods'));
     }
 
     /**

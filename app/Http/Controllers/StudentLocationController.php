@@ -18,11 +18,16 @@ class StudentLocationController extends Controller
      */
     public function index()
     {   
-        $studentLocation = StudentLocationResource::collection(
-                        StudentLocation::where('student_id', auth()->guard('api')->user()->id)
-                        ->get());
+        $studentLocation = StudentLocation::join('students', 'students.id', '=', 'student_locations.student_id')
+                        ->where('student_id', auth()->guard('api')->user()->id)
+                        ->select('student_locations.*', 'students.name', 'students.nim')
+                        ->orderBy('submission_status', 'ASC')
+                        ->orderBy('created_at', 'DESC')
+                        ->get();
 
-        return $studentLocation;
+        $response['studentlocation'] = $studentLocation;
+        
+        return response()->json($response);
     }
 
     /**
@@ -46,6 +51,7 @@ class StudentLocationController extends Controller
         $studentLocation->longitude = $request->longitude;
         $studentLocation->latitude = $request->latitude;
         $studentLocation->address = $request->address;
+        $studentLocation->submission_status = "Belum Disetujui";
         $studentLocation->save();
 
         return new StudentLocationResource($studentLocation);
@@ -62,8 +68,9 @@ class StudentLocationController extends Controller
         $user_id = auth()->guard('api')->user()->id;
         $lecturer = Lecturer::findOrFail($user_id);
         $studentLocation = $lecturer->student_location()
-                        ->where('submission_status', '!=', 'Disetujui')
-                        ->orWhereNull('submission_status')
+                        ->select('student_locations.*', 'students.name', 'students.nim')
+                        ->orderBy('submission_status', 'ASC')
+                        // ->where('submission_status', '!=', 'Disetujui')
                         ->get();
 
         $response['studentlocation'] = $studentLocation;
@@ -79,17 +86,16 @@ class StudentLocationController extends Controller
      */
     public function show($id)
     {
-        $studentLocation = StudentLocation::findOrFail($id);
-        return new StudentLocationResource($studentLocation);
+        $studentLocation = StudentLocation::join('students', 'students.id', '=', 'student_locations.student_id')
+                        ->select('student_locations.*', 'students.name', 'students.nim')
+                        ->where('student_locations.id', $id)
+                        ->get();
+
+        $response['studentlocation'] = $studentLocation;
+        
+        return response()->json($response);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\StudentLocation  $studentLocation
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         $studentLocation = StudentLocation::findOrFail($id);
@@ -98,19 +104,28 @@ class StudentLocationController extends Controller
         return new StudentLocationResource($studentLocation);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\StudentLocation  $studentLocation
-     * @return \Illuminate\Http\Response
-     */
+    public function updateByStudent(Request $request, $id)
+    {
+        $studentLocation = StudentLocation::findOrFail($id);
+        $studentLocation->update($request->all());
+
+        return new StudentLocationResource($studentLocation);
+    }
+ 
     public function destroy($id)
     {
         $studentLocation = StudentLocation::findOrFail($id);
 
-        Schema::disableForeignKeyConstraints();
+        // Schema::disableForeignKeyConstraints();
+        // $studentLocation->delete();
+        // Schema::enableForeignKeyConstraints();
+        // return response()->json(['message'=>'Submission has successfully deleted']);
+
         $studentLocation->delete();
-        Schema::enableForeignKeyConstraints();
-        return response()->json(['message'=>'Submission has successfully deleted']);
+        return response()->json(['message'=>'Location has successfully deleted']);
+
+        if (!$studentLocation->delete()) {
+            return response()->json(['error'=>'Location cannot be deleted']);
+        }
     }
 }

@@ -14,14 +14,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-/*
-Route::get('/', function () {
+
+Route::get('api', function () {
     return [
         'app' => config('app.name'),
         'version' => '1.0.0',
     ];
 });
 
+/*
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
@@ -30,14 +31,13 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 //  Authentication
 Route::post('api/register', 'AuthController@register')->name('api.register');
 Route::post('api/login', 'AuthController@login')->name('api.login');
+Route::get('api/islogin', 'AuthController@isLogin')->name('api.islogin');
 
 Route::group(['middleware' => 'api'], function () {
     //  Authentication
     Route::middleware('jwt.auth')->get('api/logout', 'AuthController@logout')->name('api.logout');
     Route::get('api/user', 'AuthController@getAuthUser')->name('api.user');
-
-    // Classroom Schedule
-    Route::apiResource('api/schedule', 'ClassroomScheduleController'); // for retrieving classroom schedule
+    Route::put('api/changepassword', 'AuthController@changePassword')->name('api.changepassword');
 
     // Student Classroom
     Route::apiResource('api/student', 'StudentController');
@@ -46,12 +46,10 @@ Route::group(['middleware' => 'api'], function () {
     // Lecturer Classroom
     Route::apiResource('api/lecturerclassroom','LecturerClassroomController'); // for retrieving lecturer classrooms
 
-    // Classroom Detail
-    Route::apiResource('api/classroom', 'ClassroomController'); // for retrieving classroom detail
-
     // Student Location Submission
     Route::apiResource('api/studentlocation', 'StudentLocationController');
     Route::get('api/studentsubmission', 'StudentLocationController@showStudentSubmissions'); // for retrieving student location submissions
+    Route::put('api/editlocation/{id}', 'StudentLocationController@updateByStudent'); // for editing student's location submission
 
     // Meeting
     Route::apiResource('api/meeting', 'MeetingController')->except('index', 'store');
@@ -61,7 +59,7 @@ Route::group(['middleware' => 'api'], function () {
 
     //Student Attendances
     Route::apiResource('api/studentattendance', 'StudentAttendanceController')->except('index');
-    Route::get('api/classattendance/{id}', 'StudentAttendanceController@showStudentAttendances');
-    Route::get('api/attendance/{student}', 'StudentController@showAttendances');
+    Route::get('api/classattendance/{id}', 'StudentAttendanceController@showStudentAttendances'); // retrieving student attendances for lecturer
+    Route::get('api/attendance/{id}', 'StudentAttendanceController@showAttendances'); // retrieving student attendances for student
 });
 

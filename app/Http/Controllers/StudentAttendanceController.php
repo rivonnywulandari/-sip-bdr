@@ -13,39 +13,32 @@ use App\Http\Resources\StudentAttendanceResource;
 
 class StudentAttendanceController extends Controller
 {    
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function showStudentAttendances($meeting_id)
     {   
-        $studentAttendance = StudentAttendanceResource::collection(
-                        StudentAttendance::join('meetings', 'meetings.id', '=', 'student_attendances.meeting_id')
-                        ->join('lecturer_classrooms', 'lecturer_classrooms.id', '=', 'meetings.lecturer_classroom_id')
-                        ->where('lecturer_id', auth()->guard('api')->user()->id)
+        $studentAttendance = StudentAttendance::join('krs', 'krs.id', '=', 'student_attendances.krs_id')
+                        ->join('students', 'students.id', '=', 'krs.student_id')
                         ->where('meeting_id', $meeting_id)
-                        ->get());
+                        ->select('student_attendances.id', 'students.name', 'students.nim', 'presence_status')
+                        ->get();
 
-        return $studentAttendance;
+        $response['studentattendance'] = $studentAttendance;
+        
+        return response()->json($response);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+    public function showAttendances($krs_id)
+    {   
+        $attendance = StudentAttendance::join('meetings', 'meetings.id', '=', 'student_attendances.meeting_id')
+                        ->where('krs_id', $krs_id)
+                        ->select('student_attendances.id', 'meetings.number_of_meeting', 'meetings.date',
+                         'meetings.start_time','meetings.finish_time', 'presence_status')
+                        ->get();
+
+        $response['attendance'] = $attendance;
+        
+        return response()->json($response);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $datetime = Carbon::now();
@@ -87,36 +80,12 @@ class StudentAttendanceController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\StudentAttendance  $studentAttendance
-     * @return \Illuminate\Http\Response
-     */
     public function show(StudentAttendance $studentAttendance)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\StudentAttendance  $studentAttendance
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(StudentAttendance $studentAttendance)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\StudentAttendance  $studentAttendance
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+   public function update(Request $request, $id)
     {
         $studentAttendance = StudentAttendance::findOrFail($id);
         $studentAttendance->update($request->only('presence_status'));
@@ -124,12 +93,6 @@ class StudentAttendanceController extends Controller
         return new StudentAttendanceResource($studentAttendance);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\StudentAttendance  $studentAttendance
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(StudentAttendance $studentAttendance)
     {
         //

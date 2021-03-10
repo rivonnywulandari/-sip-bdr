@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Krs;
 use Illuminate\Http\Request;
 use App\Http\Resources\KrsResource;
+use DB;
 
 class KrsController extends Controller
 {
@@ -15,11 +16,17 @@ class KrsController extends Controller
      */
     public function index()
     {
-        $krs = KrsResource::collection(
-            Krs::where('student_id', auth()->guard('api')->user()->id)
-            ->get());
-
-        return $krs;
+        $krs = Krs::join('classrooms','classrooms.id','=','krs.classroom_id')
+            ->join('classroom_schedules','classroom_schedules.classroom_id','=','classrooms.id')
+            ->join('courses', 'courses.id', '=', 'classrooms.course_id')
+            ->select('krs.id', 'classrooms.course_id', 'classrooms.classroom_code', DB::raw('courses.name as course_name'), 
+            'courses.sks', 'classroom_schedules.scheduled_day', 'classroom_schedules.start_time', 'classroom_schedules.finish_time', 'classroom_schedules.classroom_id')
+            ->where('student_id', auth()->guard('api')->user()->id)
+            ->get();
+  
+        $response['krs'] = $krs;
+        
+        return response()->json($response);
     }
 
     /**
