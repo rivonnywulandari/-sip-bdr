@@ -168,6 +168,7 @@ return [
         LaravelFrontendPresets\PaperPreset\PaperPresetServiceProvider::class,
         Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
+        Kreait\Laravel\Firebase\ServiceProvider::class,
 
         /*
          * Application Service Providers...

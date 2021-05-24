@@ -17,11 +17,11 @@ class KrsController extends Controller
     public function index()
     {
         $krs = Krs::join('classrooms','classrooms.id','=','krs.classroom_id')
-            ->join('classroom_schedules','classroom_schedules.classroom_id','=','classrooms.id')
             ->join('courses', 'courses.id', '=', 'classrooms.course_id')
-            ->select('krs.id', 'classrooms.course_id', 'classrooms.classroom_code', DB::raw('courses.name as course_name'), 
-            'courses.sks', 'classroom_schedules.scheduled_day', 'classroom_schedules.start_time', 'classroom_schedules.finish_time', 'classroom_schedules.classroom_id')
+            ->select('krs.id', 'krs.classroom_id', 'classrooms.course_id', 'classrooms.classroom_code', 
+            DB::raw('courses.name as course_name'), 'courses.sks', 'courses.course_code')
             ->where('student_id', auth()->guard('api')->user()->id)
+            ->groupBy('course_name')
             ->get();
   
         $response['krs'] = $krs;

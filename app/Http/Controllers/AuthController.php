@@ -4,8 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Krs;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
+use Carbon\Carbon;
+use App\Helpers\Firebase;
 
 class AuthController extends Controller
 {
@@ -24,6 +28,7 @@ class AuthController extends Controller
         'email' => $request->email,
         'password' => bcrypt($request->password),
         'email_verified_at' => now(),
+        'fcm_token' => Str::random(20)
       ]);
 
       $token = auth()->guard('api')->login($user);
@@ -36,6 +41,24 @@ class AuthController extends Controller
       $credentials = $request->only(['username', 'password']);
 
       $token = auth()->guard('api')->attempt($credentials);
+
+      if ($token) {
+        if($request->filled('device_id')){
+          Firebase::unSubscribeAllTopic(auth('api')->user()->fcm_token);
+          Firebase::unSubscribeAllTopicByDeviceId($request->device_id);
+          Firebase::updateDeviceId(auth('api')->user()->fcm_token, $request->device_id);
+          
+          if(auth('api')->user()->student){
+              $classrooms = Krs::where('student_id', auth('api')->user()->id)
+                          ->select('classroom_id')
+                          ->get();
+              
+              foreach($classrooms as $classroom) {
+                Firebase::subscribeTopic($classroom->classroom_id, $request->device_id);
+              }
+          } 
+        }
+      }
 
       if (!$token) {
         return response()->json(['error' => 'Unauthorized'], 401);
@@ -95,9 +118,10 @@ class AuthController extends Controller
           'data' => [
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => auth('api')->factory()->getTTL() * 60,
+            // 'expires_in' => auth('api')->factory()->getTTL(),
             'name' => auth('api')->user()->lecturer->name,
             'nip' => auth('api')->user()->lecturer->nip,
+            'fcm_token' => auth('api')->user()->fcm_token,
           ]
         ]);
       } else {
@@ -105,9 +129,10 @@ class AuthController extends Controller
           'data' => [
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => auth('api')->factory()->getTTL() * 60,
+            // 'expires_in' => auth('api')->factory()->getTTL() * 60,
             'name' => auth('api')->user()->student->name,
             'nim' => auth('api')->user()->student->nim,
+            'fcm_token' => auth('api')->user()->fcm_token,
           ]
         ]);
       }
@@ -137,7 +162,7 @@ class AuthController extends Controller
                   $user->update();
                   return response()->json([
                       'success' => true,
-                      'message' =>'Password has changed successfully'
+                      'message' =>'Password successfully updated'
                   ]);
               }else{
                   $validator->errors()->add('old_password','The current password field does not match your password');
@@ -150,7 +175,7 @@ class AuthController extends Controller
       } catch (\Exception $e) {
           return response()->json([
               'success' => true,
-              'message' =>'Password has not changed successfully'
+              'message' =>'Password has not updated successfully'
           ], 401);
       }
     }

@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "si-presensi-online",
+  "private_key_id": "8b6253763d54105995c6afc920e91ac9462409e9",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCaQGsY9atIn66r\nMadF0Rz/WF/fyQkSoiiET72ShFAUISmtJd5dveLKIxnw5RUPNoTOc9n3nGpcqGuy\nAh0vVyPqDxQxWbXhTqk506z9SwwBAeHTi3xqopBU/Rz4gKmtpLuxOJWe2YqFO79A\nVpShyewnBSfexYvJ4vnWgLQguo5SgTH1w6tBKSejwrjTPGOn3yi/VhM5Nwr0Gz0F\nBfZgkzOwOsFx4JMBk3OF6DkZB/toR/4nF1ZPAdgYqTAtwvyYs4Vf68kiVB8nrjaZ\nPyeeY8lGzK9azksmw3+TRVeC/YNN30yUiskbCYN63UYmihCNRvbw5PinqUMlSNEc\nWvJ3MzXbAgMBAAECggEADCPhyfcb4f1fW+3uglow9A/ai9xgsGy+z5sPCocLXmo1\nw4DlfW9CeDJHCmSdQbNCxJTtpMVUwbInt7ze2yj6lKNXLYMoA3GTdA+q38yWR0YE\npgemZSYiQe4h55UIxbffZdVUQUpR0qafKMsnq4we3/tR5gCaPet1SmKayrCkHu4Y\nyFqEIOdh/McgRFgcT3Qbpb2XvxYqByBYt371Fiavt3HYb3aisfdaE5+fpxCwLN+s\nMfgEqYUE3nSQPTr45M6lt8l42OYldGspDAKD2VAwxVPbY93HOmtiRu7bp+AnW4kF\nS0YSJrpqHnw57eFw0rl8ho+tqyCt9cHPDug6JjXRIQKBgQDWLjHmAk/5qjYr4z/q\nCbgiWCVEIaqXMLTK+mwqVn1/G20zFwb+1El4mAKXSylm5vq2VCicxwh7UhGiC/PS\nC+xhH2oFbOu4f3W6N5D4vm/QV9q1ylkuwkco7QcnVyHUayXXWKoRMPDnv4tQ7vIK\nSboMQ0mI2D6ukxnczV1ntUyb2QKBgQC4Xq7UqPws3/usbiGRKjExyeVk8iF9hrtS\nyALjT637WXcajIcVSd/dmSQaxZ0aoatUP+m68Zska5iDa/+AUweJlAcLKOaldnWP\nLvqGCVgGjm4eG1453SjSz+CNvXygggXy4vgsT4PesJUjd/Kd7hHEqG9zpDgzLA2P\nuCVLTnWS0wKBgQCKDpTTckIi6HiqqX0VWtZ6LN84n4rakea3v9vhHoceW4t0Fy/H\nKweA2FszMpupXNHWnUDgbdslwqzjC1lK16yynhE1FhSLhH1aX17vN7HTVg4AiEIc\nRdagpsiprxx7U+W8fcaB9k4S1AD1VlBmGUf3h5fqwZkF5oQRM781jkOnYQKBgAPU\n4+lDgcok9YQF3ei4acFRItVQOuXy8N2tjnHO7By3JUSF+yC0IlTmo9tyk+tDxN3B\nXkgmUUUWf1rr2al/ED8JtoPC29hAd/z7yvUSKKQqPZuekfy93eVTsKUBdR+Y1CrS\nELpLBMCSBudvzLj/g5sErRxII2rc1YNRHmVMQiFFAoGBALKdwQ819hnX14M+g4Ab\n43rrnKpXxjz0nM7KMTKsXVkWcZ5fAfnmJ5jUQXR9W4WZ2tvk9pQp/B93ofhB7Mp0\n337S2tQkCOuMlB0LAsn3yptewYSE2PH81RoEKk1By88D3LT1iHAgt9emrAhM34z3\nzT1ppnm1Qrfu6z93E00okDk2\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-1eo6u@si-presensi-online.iam.gserviceaccount.com",
+  "client_id": "113993188111543941249",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-1eo6u%40si-presensi-online.iam.gserviceaccount.com"
+}

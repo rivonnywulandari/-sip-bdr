@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             // StudentLocationSeeder::class,
             // MeetingSeeder::class,
             // StudentAttendanceSeeder::class,
+            // AddTopicSeeder::class,
         ]);
     }
 }

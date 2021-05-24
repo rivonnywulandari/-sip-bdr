@@ -75,6 +75,7 @@ class ClassroomController extends Controller
                 ->select('student_attendances.id as att_id', 'presence_status', 'students.name as student_name', 'students.nim', 'meetings.date')
                 ->where('classroom_id', $id)
                 ->groupBy('meetings.date', 'students.name')
+                ->orderBy('nim')
                 ->get();
         
         $presence = [];

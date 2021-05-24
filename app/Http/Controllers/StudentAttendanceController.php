@@ -30,54 +30,51 @@ class StudentAttendanceController extends Controller
     {   
         $attendance = StudentAttendance::join('meetings', 'meetings.id', '=', 'student_attendances.meeting_id')
                         ->where('krs_id', $krs_id)
-                        ->select('student_attendances.id', 'meetings.number_of_meeting', 'meetings.date',
-                         'meetings.start_time','meetings.finish_time', 'presence_status')
+                        ->select('student_attendances.id', 'meetings.id AS meeting_id', 'meetings.number_of_meeting', 
+                        'meetings.date','meetings.start_time','meetings.finish_time', 'presence_status')
+                        ->orderBy('date')
                         ->get();
 
         $response['attendance'] = $attendance;
-        
+
         return response()->json($response);
     }
 
     public function store(Request $request)
     {
-        $datetime = Carbon::now();
+        // $datetime = Carbon::now();
 
-        $meeting_id = Meeting::where('start_time', '<=', $datetime->toTimeString())
-                    ->where('finish_time', '>=', $datetime->toTimeString())
-                    ->where('date', $datetime->toDateString())
-                    ->first();
+        // $meeting_id = Meeting::where('start_time', '<=', $datetime->toTimeString())
+        //             ->where('finish_time', '>=', $datetime->toTimeString())
+        //             ->where('date', $datetime->toDateString())
+        //             ->first();
         
-        $krs_id = DB::table('krs')
-                ->join('classrooms', 'krs.classroom_id', '=', 'classrooms.id')
-                ->join('lecturer_classrooms', 'classrooms.id', '=', 'lecturer_classrooms.classroom_id')
-                ->join('meetings', 'lecturer_classrooms.id', '=', 'meetings.lecturer_classroom_id')
-                ->where('lecturer_classrooms.id', $meeting_id->lecturer_classroom_id)
-                ->value('krs.id');
+        // $krs_id = DB::table('krs')
+        //         ->join('classrooms', 'krs.classroom_id', '=', 'classrooms.id')
+        //         ->join('lecturer_classrooms', 'classrooms.id', '=', 'lecturer_classrooms.classroom_id')
+        //         ->join('meetings', 'lecturer_classrooms.id', '=', 'meetings.lecturer_classroom_id')
+        //         ->where('lecturer_classrooms.id', $meeting_id->lecturer_classroom_id)
+        //         ->value('krs.id');
 
         $student_location_id = StudentLocation::where('student_id', auth()->guard('api')->user()->id)
                             ->where('submission_status', 'Disetujui')
                             ->value('id');
 
-        if($meeting_id && $krs_id && $student_location_id) {
+        // if($meeting_id && $krs_id && $student_location_id) {
             $studentAttendance = new StudentAttendance;
-            $studentAttendance->krs_id = $krs_id;
-            $studentAttendance->meeting_id = $meeting_id->id;
+            $studentAttendance->krs_id = $request->krs_id;
+            $studentAttendance->meeting_id = $request->meeting_id;
             $studentAttendance->student_location_id = $student_location_id;
             $studentAttendance->presence_status = $request->presence_status;
+            if ($studentAttendance->presence_status == "Absen") {
+                $studentAttendance->needs_review = 1;
+            }
             $studentAttendance->save();
 
-            return new StudentAttendanceResource($studentAttendance);
+            $response['attendance'] = new StudentAttendanceResource($studentAttendance);
 
-        } else {
-            $studentAttendance = new StudentAttendance;
-            $studentAttendance->krs_id = $krs_id;
-            $studentAttendance->meeting_id = $meeting_id->id;
-            $studentAttendance->presence_status = 'Absen';
-            $studentAttendance->save();
-
-            return new StudentAttendanceResource($studentAttendance);
-        }
+            return response()->json($response);
+            // return new StudentAttendanceResource($studentAttendance);
     }
 
     public function show(StudentAttendance $studentAttendance)
@@ -91,6 +88,16 @@ class StudentAttendanceController extends Controller
         $studentAttendance->update($request->only('presence_status'));
 
         return new StudentAttendanceResource($studentAttendance);
+    }
+
+    public function updateReviewStatus(Request $request, $krs_id, $meeting_id)
+    {
+        $stuAttendance = StudentAttendance::where('krs_id', $krs_id)
+                ->where('meeting_id', $meeting_id)
+                ->first();
+        $stuAttendance->update($request->only('needs_review'));
+    
+        return new StudentAttendanceResource($stuAttendance);
     }
 
     public function destroy(StudentAttendance $studentAttendance)

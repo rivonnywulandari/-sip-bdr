@@ -20,6 +20,7 @@ class StudentAttendanceResource extends JsonResource
             'meeting_id'=> $this->meeting,
             'student_location_id'=> $this->student_location,
             'presence_status'=> $this->presence_status,
+            'needs_review'=> $this->needs_review,
         ];
     }
 }

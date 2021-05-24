@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\StudentLocation;
+use App\Models\User;
 use App\Models\Student;
 use App\Models\Lecturer;
+use App\Helpers\Firebase;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
 use App\Http\Resources\StudentLocationResource;
@@ -39,6 +41,8 @@ class StudentLocationController extends Controller
     public function store(Request $request)
     {
         $user_id = auth()->guard('api')->user()->id;
+        $student = Student::findOrFail($user_id);
+        $receiver = User::findOrFail($student->lecturer_id);
 
         $this->validate($request, [
             'longitude' => 'required',
@@ -52,7 +56,16 @@ class StudentLocationController extends Controller
         $studentLocation->latitude = $request->latitude;
         $studentLocation->address = $request->address;
         $studentLocation->submission_status = "Belum Disetujui";
-        $studentLocation->save();
+        // $studentLocation->save();
+
+        if ($studentLocation->save()) {
+            Firebase::sendSubmission($studentLocation);
+            Firebase::sendNotificationToUID($receiver->fcm_token, [
+                'title' => 'Notifikasi Pengajuan',
+                'body' => 'Pengajuan lokasi baru menunggu di-follow up!',
+                'type' => 'Updates',
+            ]); 
+        }
 
         return new StudentLocationResource($studentLocation);
     }
@@ -70,7 +83,6 @@ class StudentLocationController extends Controller
         $studentLocation = $lecturer->student_location()
                         ->select('student_locations.*', 'students.name', 'students.nim')
                         ->orderBy('submission_status', 'ASC')
-                        // ->where('submission_status', '!=', 'Disetujui')
                         ->get();
 
         $response['studentlocation'] = $studentLocation;
@@ -84,23 +96,43 @@ class StudentLocationController extends Controller
      * @param  \App\Models\StudentLocation  $studentLocation
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function showLatLng()
     {
-        $studentLocation = StudentLocation::join('students', 'students.id', '=', 'student_locations.student_id')
-                        ->select('student_locations.*', 'students.name', 'students.nim')
-                        ->where('student_locations.id', $id)
-                        ->get();
-
-        $response['studentlocation'] = $studentLocation;
+        $latlng = StudentLocation::select('latitude', 'longitude')
+                        ->where('student_id', auth()->guard('api')->user()->id)
+                        ->where('submission_status', 'Disetujui')
+                        ->first();
         
-        return response()->json($response);
+        return response()->json([
+            'location' => [
+              'latlng' => $latlng
+            ]
+          ]);
     }
 
     public function update(Request $request, $id)
     {
         $studentLocation = StudentLocation::findOrFail($id);
         $studentLocation->update($request->only('submission_status'));
+        $receiver = User::findOrFail($studentLocation->student_id);
 
+        if ($studentLocation->save()) {
+            Firebase::sendSubmission($studentLocation);
+            if ($studentLocation->submission_status == 'Disetujui') {
+                Firebase::sendNotificationToUID($receiver->fcm_token, [
+                    'title' => 'Notifikasi Pengajuan',
+                    'body' => 'Pengajuan lokasi Anda telah diterima!',
+                    'type' => 'Updates',
+                ]); 
+            } else {
+                Firebase::sendNotificationToUID($receiver->fcm_token, [
+                    'title' => 'Notifikasi Pengajuan',
+                    'body' => 'Pengajuan lokasi Anda telah ditolak.',
+                    'type' => 'Updates',
+                ]); 
+            }
+        }
+        
         return new StudentLocationResource($studentLocation);
     }
 
@@ -115,13 +147,10 @@ class StudentLocationController extends Controller
     public function destroy($id)
     {
         $studentLocation = StudentLocation::findOrFail($id);
-
-        // Schema::disableForeignKeyConstraints();
-        // $studentLocation->delete();
-        // Schema::enableForeignKeyConstraints();
-        // return response()->json(['message'=>'Submission has successfully deleted']);
-
         $studentLocation->delete();
+        if ($studentLocation->delete()) {
+            Firebase::deleteLocation($id);
+        }
         return response()->json(['message'=>'Location has successfully deleted']);
 
         if (!$studentLocation->delete()) {

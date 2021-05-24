@@ -17,19 +17,14 @@ class LecturerClassroomController extends Controller
     public function index()
     {
         $lecturerClassroom = LecturerClassroom::join('classrooms','classrooms.id','=','lecturer_classrooms.classroom_id')
-            ->join('classroom_schedules','classroom_schedules.classroom_id','=','classrooms.id')
             ->join('courses', 'courses.id', '=', 'classrooms.course_id')
-            ->select('lecturer_classrooms.id', 'classrooms.course_id', 'classrooms.classroom_code', DB::raw('courses.name as course_name'), 
-            'courses.sks', 'classroom_schedules.scheduled_day', 'classroom_schedules.start_time', 'classroom_schedules.finish_time', 'classroom_schedules.classroom_id')
+            ->select('lecturer_classrooms.id', 'lecturer_classrooms.classroom_id', 'classrooms.course_id', 'classrooms.classroom_code', DB::raw('courses.name as course_name'), 
+            'courses.sks', 'courses.course_code')
             ->where('lecturer_id', auth()->guard('api')->user()->id)
+            ->groupBy('course_name')
             ->get();
 
-        // $lecturers = LecturerClassroom::join('lecturers','lecturers.id','=','lecturer_classrooms.lecturer_id')
-        //     ->select('lecturer_classrooms.id', 'lecturers.*')
-        //     ->get();
-            
         $response['lecturerclassrooms'] = $lecturerClassroom;
-        //$response['lecturers'] = $lecturers;
         
         return response()->json($response);
     }
@@ -41,17 +36,6 @@ class LecturerClassroomController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\LecturerClassroom  $lecturerClassroom
-     * @return \Illuminate\Http\Response
-     */
-    public function show(LecturerClassroom $lecturerClassroom)
     {
         //
     }

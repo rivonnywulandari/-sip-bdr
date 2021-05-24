@@ -13,6 +13,7 @@ class Meeting extends Model
         'date', 
         'start_time', 
         'finish_time', 
+        'topic',
         'lecturer_classroom_id'
     ];
 

@@ -9,7 +9,8 @@ class StudentAttendance extends Model
 {
     use HasFactory;
     protected $fillable = [ 
-        'presence_status'
+        'presence_status',
+        'needs_review'
     ];
 
     public function meeting(){
