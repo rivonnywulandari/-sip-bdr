@@ -3,18 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\Meeting;
-use App\Models\LecturerClassroom;
-use App\Models\Krs;
+use App\Models\Classroom;
 use App\Helpers\Firebase;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Resources\MeetingResource;
 
 class MeetingController extends Controller
 {
-    public function showMeetingNumber($lecturer_classroom_id)
+    public function showMeetingNumber($classroom_id)
     {
-        $meetingNumbers = Meeting::where('lecturer_classroom_id', $lecturer_classroom_id)
+        $meetingNumbers = Meeting::join('lecturer_classrooms', 'lecturer_classrooms.id', '=', 'meetings.lecturer_classroom_id')
+                        ->where('lecturer_classrooms.classroom_id', $classroom_id)
                         ->select('number_of_meeting')
                         ->get();
 
@@ -51,10 +50,14 @@ class MeetingController extends Controller
             $classroom_id = $meeting->lecturer_classroom->classroom_id;
             Firebase::sendNotificationToTopic($classroom_id, [
                 'title' => 'Notifikasi Masuk Kelas',
-                'body' => 'Kelas telah dimulai. Jangan lupa isi daftar hadir!',
+                'body' => 'Kelas telah dimulai. Ketuk untuk mengisi daftar hadir!',
                 'type' => 'Reminder',
                 'isScheduled' => "true",
                 'scheduledTime' => "$meeting->date $meeting->start_time",
+                'meetingId' => "$meeting->id",
+                'date' => "$meeting->date",
+                'startTime' => "$meeting->start_time",
+                'finishTime' => "$meeting->finish_time",
             ]); 
         }
 
@@ -67,38 +70,16 @@ class MeetingController extends Controller
      * @param  \App\Models\Lecturer  $lecturer
      * @return \Illuminate\Http\Response
      */
-    public function showLecturerMeetings($lecturer_classroom_id)
+    public function showLecturerMeetings($classroom_id)
     {
-        $classroom = LecturerClassroom::findOrFail($lecturer_classroom_id);
+        $classroom = Classroom::findOrFail($classroom_id);
 
         $meetings = $classroom->meeting()->orderBy('date')->get();
         $response['meetings'] = $meetings;
         
         return response()->json($response);
     }
-
-    /**
-     * Display list of meetings.
-     *
-     * @param  \App\Models\Lecturer  $lecturer
-     * @return \Illuminate\Http\Response
-     */
-    public function showStudentMeetings($classroom_id)
-    {
-        $meetings = Meeting::join('lecturer_classrooms', 'lecturer_classrooms.id', '=', 'meetings.lecturer_classroom_id')
-                ->join('classrooms', 'lecturer_classrooms.classroom_id', '=', 'classrooms.id')
-                ->join('krs', 'classrooms.id', '=', 'krs.classroom_id')
-                ->select('meetings.*')
-                ->where('lecturer_classrooms.classroom_id', $classroom_id)
-                ->where('krs.student_id', auth()->guard('api')->user()->id)
-                ->orderBy('date')
-                ->get();
-
-        $response['meetings'] = $meetings;
-        
-        return response()->json($response);
-    }
-
+    
     /**
      * Update the specified resource in storage.
      *
@@ -109,6 +90,21 @@ class MeetingController extends Controller
     public function update(Request $request, Meeting $meeting)
     {
         $meeting->update($request->all());
+
+        if ($meeting->save()) {
+            $classroom_id = $meeting->lecturer_classroom->classroom_id;
+            Firebase::sendNotificationToTopic($classroom_id, [
+                'title' => 'Notifikasi Masuk Kelas',
+                'body' => 'Kelas telah dimulai. Ketuk untuk mengisi daftar hadir!',
+                'type' => 'Reminder',
+                'isScheduled' => "true",
+                'scheduledTime' => "$meeting->date $meeting->start_time",
+                'meetingId' => "$meeting->id",
+                'date' => "$meeting->date",
+                'startTime' => "$meeting->start_time",
+                'finishTime' => "$meeting->finish_time",
+            ]); 
+        }
 
         return new MeetingResource($meeting);
     }
@@ -122,9 +118,20 @@ class MeetingController extends Controller
     public function destroy($id)
     {
         $meeting = Meeting::findOrFail($id);
-
-        $meeting->delete();
-        return response()->json(['message'=>'Meeting has successfully deleted']);
+        $meetingId = $meeting->id;
+        $classroom_id = $meeting->lecturer_classroom->classroom_id;
+        
+        if ($meeting->delete()) {
+            Firebase::sendNotificationToTopic($classroom_id, [
+                'title' => 'Notifikasi Masuk Kelas',
+                'body' => 'Kelas telah dimulai. Ketuk untuk mengisi daftar hadir!',
+                'type' => 'Reminder',
+                'isScheduled' => "true",
+                'scheduledTime' => "0",
+                'meetingId' => "$meetingId",
+            ]); 
+            return response()->json(['message'=>'Meeting has successfully deleted']);
+        }
 
         if (!$meeting->delete()) {
             return response()->json(['error'=>'Meeting cannot be deleted']);

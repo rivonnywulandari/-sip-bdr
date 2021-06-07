@@ -27,7 +27,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $periods = Period::all()->pluck('period', 'id');
+        $periods = Period::all()->sortByDesc('id')->pluck('period', 'id');
 
         return view('pages.home', compact('periods'));
     }

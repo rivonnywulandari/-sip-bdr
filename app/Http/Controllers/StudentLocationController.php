@@ -56,7 +56,6 @@ class StudentLocationController extends Controller
         $studentLocation->latitude = $request->latitude;
         $studentLocation->address = $request->address;
         $studentLocation->submission_status = "Belum Disetujui";
-        // $studentLocation->save();
 
         if ($studentLocation->save()) {
             Firebase::sendSubmission($studentLocation);
@@ -113,27 +112,45 @@ class StudentLocationController extends Controller
     public function update(Request $request, $id)
     {
         $studentLocation = StudentLocation::findOrFail($id);
-        $studentLocation->update($request->only('submission_status'));
         $receiver = User::findOrFail($studentLocation->student_id);
 
-        if ($studentLocation->save()) {
-            Firebase::sendSubmission($studentLocation);
-            if ($studentLocation->submission_status == 'Disetujui') {
-                Firebase::sendNotificationToUID($receiver->fcm_token, [
-                    'title' => 'Notifikasi Pengajuan',
-                    'body' => 'Pengajuan lokasi Anda telah diterima!',
-                    'type' => 'Updates',
-                ]); 
+        $accepted_location = StudentLocation::where('student_id', $studentLocation->student_id)
+                            ->where('submission_status', 'Disetujui')
+                            ->count();
+
+        if ($request->submission_status == "Disetujui") {
+            if ($accepted_location == 0) {
+                $studentLocation->update($request->only('submission_status'));
+                if ($studentLocation->update()) {
+                    Firebase::sendNotificationToUID($receiver->fcm_token, [
+                        'title' => 'Notifikasi Pengajuan',
+                        'body' => 'Pengajuan lokasi Anda telah diterima!',
+                        'type' => 'Updates',
+                    ]); 
+                    $response['location'] = new StudentLocationResource($studentLocation);
+                    return response()->json($response);
+                }
             } else {
+                return response()->json(['error'=>'Nonaktifkan lokasi yang disetujui sebelumnya terlebih dahulu.'], 403);
+            } 
+        } else if ($request->submission_status == "Ditolak") {
+            $studentLocation->update($request->only('submission_status'));
+            if ($studentLocation->update()) {
                 Firebase::sendNotificationToUID($receiver->fcm_token, [
                     'title' => 'Notifikasi Pengajuan',
                     'body' => 'Pengajuan lokasi Anda telah ditolak.',
                     'type' => 'Updates',
                 ]); 
+                $response['location'] = new StudentLocationResource($studentLocation);
+                return response()->json($response);
+            }
+        } else {
+            $studentLocation->update($request->only('submission_status'));
+            if ($studentLocation->update()) {
+                $response['location'] = new StudentLocationResource($studentLocation);
+                return response()->json($response);
             }
         }
-        
-        return new StudentLocationResource($studentLocation);
     }
 
     public function updateByStudent(Request $request, $id)
@@ -148,9 +165,7 @@ class StudentLocationController extends Controller
     {
         $studentLocation = StudentLocation::findOrFail($id);
         $studentLocation->delete();
-        if ($studentLocation->delete()) {
-            Firebase::deleteLocation($id);
-        }
+        
         return response()->json(['message'=>'Location has successfully deleted']);
 
         if (!$studentLocation->delete()) {

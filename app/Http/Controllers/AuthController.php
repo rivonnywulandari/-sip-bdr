@@ -121,7 +121,6 @@ class AuthController extends Controller
             // 'expires_in' => auth('api')->factory()->getTTL(),
             'name' => auth('api')->user()->lecturer->name,
             'nip' => auth('api')->user()->lecturer->nip,
-            'fcm_token' => auth('api')->user()->fcm_token,
           ]
         ]);
       } else {
@@ -132,7 +131,6 @@ class AuthController extends Controller
             // 'expires_in' => auth('api')->factory()->getTTL() * 60,
             'name' => auth('api')->user()->student->name,
             'nim' => auth('api')->user()->student->nim,
-            'fcm_token' => auth('api')->user()->fcm_token,
           ]
         ]);
       }

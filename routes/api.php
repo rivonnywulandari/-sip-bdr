@@ -56,14 +56,13 @@ Route::group(['middleware' => 'api'], function () {
 
     // Meeting
     Route::apiResource('api/meeting', 'MeetingController')->except('index', 'store');
-    Route::get('api/lecturermeetings/{id}', 'MeetingController@showLecturerMeetings');
-    Route::get('api/studentmeetings/{classroom_id}', 'MeetingController@showStudentMeetings');
+    Route::get('api/lecturermeetings/{classroom_id}', 'MeetingController@showLecturerMeetings'); // retrieving meetings for lecturer 
     Route::post('api/meeting/{id}', 'MeetingController@createMeeting');
     Route::get('api/meetingnumber/{lecturer_classroom_id}', 'MeetingController@showMeetingNumber');
 
     //Student Attendances
     Route::apiResource('api/studentattendance', 'StudentAttendanceController')->except('index');
-    Route::patch('api/needsreview/{krs_id}/{meeting_id}', 'StudentAttendanceController@updateReviewStatus'); // update whether student needs review or not
+    Route::patch('api/needsreview/{meeting_id}', 'StudentAttendanceController@updateReviewStatus'); // update whether student needs review or not
     Route::get('api/classattendance/{id}', 'StudentAttendanceController@showStudentAttendances'); // retrieving student attendances for lecturer
     Route::get('api/attendance/{id}', 'StudentAttendanceController@showAttendances'); // retrieving student attendances for student
 });
