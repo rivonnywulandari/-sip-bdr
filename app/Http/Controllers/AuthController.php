@@ -30,10 +30,6 @@ class AuthController extends Controller
         'email_verified_at' => now(),
         'fcm_token' => Str::random(20)
       ]);
-
-      $token = auth()->guard('api')->login($user);
-
-      return $this->respondWithToken($token);
     }
 
     public function login(Request $request)
@@ -118,7 +114,6 @@ class AuthController extends Controller
           'data' => [
             'access_token' => $token,
             'token_type' => 'bearer',
-            // 'expires_in' => auth('api')->factory()->getTTL(),
             'name' => auth('api')->user()->lecturer->name,
             'nip' => auth('api')->user()->lecturer->nip,
           ]
@@ -128,7 +123,6 @@ class AuthController extends Controller
           'data' => [
             'access_token' => $token,
             'token_type' => 'bearer',
-            // 'expires_in' => auth('api')->factory()->getTTL() * 60,
             'name' => auth('api')->user()->student->name,
             'nim' => auth('api')->user()->student->nim,
           ]

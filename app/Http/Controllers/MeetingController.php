@@ -22,12 +22,6 @@ class MeetingController extends Controller
         return response()->json($response);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function createMeeting(Request $request, $lecturer_classroom_id)
     {
         $this->validate($request, [
@@ -64,29 +58,16 @@ class MeetingController extends Controller
         return new MeetingResource($meeting);   
     }
 
-    /**
-     * Display list of meetings.
-     *
-     * @param  \App\Models\Lecturer  $lecturer
-     * @return \Illuminate\Http\Response
-     */
     public function showLecturerMeetings($classroom_id)
     {
         $classroom = Classroom::findOrFail($classroom_id);
 
-        $meetings = $classroom->meeting()->orderBy('date')->get();
+        $meetings = $classroom->meeting()->orderBy('number_of_meeting')->get();
         $response['meetings'] = $meetings;
         
         return response()->json($response);
     }
     
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Meeting  $meeting
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, Meeting $meeting)
     {
         $meeting->update($request->all());
@@ -109,12 +90,6 @@ class MeetingController extends Controller
         return new MeetingResource($meeting);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Meeting  $meeting
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         $meeting = Meeting::findOrFail($id);

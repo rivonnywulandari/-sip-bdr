@@ -22,12 +22,6 @@ Route::get('api', function () {
     ];
 });
 
-/*
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
-*/
-
 //  Authentication
 Route::post('api/register', 'AuthController@register')->name('api.register');
 Route::post('api/login', 'AuthController@login')->name('api.login');

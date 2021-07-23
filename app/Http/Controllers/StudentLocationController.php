@@ -58,7 +58,6 @@ class StudentLocationController extends Controller
         $studentLocation->submission_status = "Belum Disetujui";
 
         if ($studentLocation->save()) {
-            Firebase::sendSubmission($studentLocation);
             Firebase::sendNotificationToUID($receiver->fcm_token, [
                 'title' => 'Notifikasi Pengajuan',
                 'body' => 'Pengajuan lokasi baru menunggu di-follow up!',

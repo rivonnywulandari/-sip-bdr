@@ -20,6 +20,7 @@ class MeetingResource extends JsonResource
             'date'=> $this->date,
             'start_time'=> $this->start_time,
             'finish_time'=> $this->finish_time,
+            'topic' => $this->topic,
             'lecturer_classroom_id'=> $this->lecturer_classroom,
         ];
     }

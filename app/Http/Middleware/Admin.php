@@ -20,6 +20,6 @@ class Admin
             return $next($request);
         } 
         Auth::logout();
-        return redirect()->route('login')->withErrors('Sorry, you are not allowed to access this page.');
+        return redirect()->route('login')->withErrors('Incorrect username or password.');
     }
 }

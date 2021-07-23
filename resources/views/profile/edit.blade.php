@@ -24,7 +24,7 @@
                                 <p class="col-md-3 mt-2 align-middle">{{ __('Old Password') }}</p>
                                 <div class="col-md-9">
                                     <div class="form-group">
-                                        <input type="password" name="old_password" class="form-control" placeholder="Old password" required>
+                                        <input type="password" name="old_password" class="form-control" placeholder="Old Password" required>
                                     </div>
                                     @if ($errors->has('old_password'))
                                         <span class="invalid-feedback" style="display: block;" role="alert">
