@@ -17,6 +17,24 @@
                     <p>{{ __('Home') }}</p>
                 </a>
             </li>
+            <li class="{{ $elementActive == 'period' ? 'active' : '' }}">
+                <a href="{{ route('period.index') }}">
+                    <i class="nc-icon nc-calendar-60"></i>
+                    <p>{{ __(' Period Management') }}</p>
+                </a>
+            </li>
+            <li class="{{ $elementActive == 'course' ? 'active' : '' }}">
+                <a href="{{ route('course.index') }}">
+                    <i class="nc-icon nc-book-bookmark"></i>
+                    <p>{{ __(' Course Management') }}</p>
+                </a>
+            </li>
+            <li class="{{ $elementActive == 'classroom' ? 'active' : '' }}">
+                <a href="{{ route('classroom.index') }}">
+                    <i class="nc-icon nc-hat-3"></i>
+                    <p>{{ __(' Class Management ') }}</p>
+                </a>
+            </li>
             <li class="{{ $elementActive == 'profile' ? 'active' : '' }}">
                 <a href="{{ route('profile.edit') }}">
                     <i class="nc-icon nc-single-02"></i>

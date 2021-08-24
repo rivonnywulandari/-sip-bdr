@@ -11,7 +11,7 @@
             </div>
         @endif
         <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-12">
                 <form class="col-md-12" action="{{ route('profile.password') }}" method="POST">
                     @csrf
                     @method('PUT')
@@ -20,9 +20,10 @@
                             <h5 class="card-title">{{ __('Change Password') }}</h5>
                         </div>
                         <div class="card-body">
-                            <div class="row">
-                                <p class="col-md-3 mt-2 align-middle">{{ __('Old Password') }}</p>
-                                <div class="col-md-9">
+                            <div class="form-group row">
+                                <div class="col-sm-2"></div>
+                                <p class="col-sm-2 col-form-label">{{ __('Old Password') }}</p>
+                                <div class="col-sm-6">
                                     <div class="form-group">
                                         <input type="password" name="old_password" class="form-control" placeholder="Old Password" required>
                                     </div>
@@ -32,10 +33,12 @@
                                         </span>
                                     @endif
                                 </div>
+                                <div class="col-sm-2"></div>
                             </div>
-                            <div class="row">
-                                <p class="col-md-3 mt-2 align-middle">{{ __('New Password') }}</p>
-                                <div class="col-md-9">
+                            <div class="form-group row">
+                                <div class="col-sm-2"></div>
+                                <p class="col-sm-2 col-form-label">{{ __('New Password') }}</p>
+                                <div class="col-sm-6">
                                     <div class="form-group">
                                         <input type="password" name="password" class="form-control" placeholder="Password" required>
                                     </div>
@@ -45,10 +48,12 @@
                                         </span>
                                     @endif
                                 </div>
+                                <div class="col-sm-2"></div>
                             </div>
-                            <div class="row">
-                                <p class="col-md-3 mt-2 align-middle">{{ __('Password Confirmation') }}</p>
-                                <div class="col-md-9">
+                            <div class="form-group row">
+                                <div class="col-sm-2"></div>
+                                <p class="col-sm-2 col-form-label">{{ __('Password Confirmation') }}</p>
+                                <div class="col-sm-6">
                                     <div class="form-group">
                                         <input type="password" name="password_confirmation" class="form-control" placeholder="Password Confirmation" required>
                                     </div>
@@ -58,12 +63,11 @@
                                         </span>
                                     @endif
                                 </div>
+                                <div class="col-sm-2"></div>
                             </div>
-                        </div>
-                        <div class="card-footer ">
                             <div class="row">
-                                <div class="col-md-12 text-center">
-                                    <button type="submit" class="btn btn-info btn-round">{{ __('Save Changes') }}</button>
+                                <div class="col-sm-10">
+                                    <button type="submit" class="btn btn-info btn-round float-right mb-3">{{ __('Save Changes') }}</button>
                                 </div>
                             </div>
                         </div>

@@ -67,6 +67,8 @@ The above copyright notice and this permission notice shall be included in all c
     <script src="{{ asset('paper') }}/demo/demo.js"></script>
     <!-- Sharrre libray -->
     <script src="../assets/demo/jquery.sharrre.js"></script>
+    <!-- Font Awesome CSS -->
+    <script src="https://kit.fontawesome.com/b056a8c538.js" crossorigin="anonymous"></script>
     
     @stack('scripts')
 

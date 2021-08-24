@@ -9,6 +9,11 @@ class Classroom extends Model
 {
     use HasFactory;
     public $timestamps = false;
+    protected $fillable = [ 
+        'classroom_code', 
+        'period_id', 
+        'course_id'
+    ];
     
     public function period(){
         return $this->belongsTo('App\Models\Period');
