@@ -9,6 +9,12 @@ class Student extends Model
 {
     use HasFactory;
     public $timestamps = false;
+    protected $fillable = [ 
+        'id',
+        'name', 
+        'nim', 
+        'lecturer_id'
+    ];
     
     public function user(){
         return $this->belongsTo('App\Models\User');

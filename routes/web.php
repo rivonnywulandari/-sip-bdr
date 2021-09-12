@@ -24,6 +24,14 @@ Route::group(['middleware' => 'admin'], function () {
 	Route::get('home/classrooms/{id?}', 'App\Http\Controllers\HomeController@classrooms')->name('select-classroom');
 	Route::post('home', 'App\Http\Controllers\HomeController@store')->name('home.store');
 
+	// Routes for user management
+	Route::get('user', 'App\Http\Controllers\UserController@index')->name('user.index');  
+	Route::post('user/import', 'App\Http\Controllers\UserController@import')->name('user.import'); 
+	Route::get('user/{id}/edit', 'App\Http\Controllers\UserController@edit')->name('user.edit');
+	Route::patch('user/{user}', 'App\Http\Controllers\UserController@update')->name('user.update');
+	Route::delete('user/{id}', 'App\Http\Controllers\UserController@destroy')->name('user.destroy');
+	Route::get('user/{id}', 'App\Http\Controllers\UserController@show')->name('user.show');
+	
 	// Routes for period management
 	Route::get('period', 'App\Http\Controllers\PeriodController@index')->name('period.index');  
 	Route::get('period/create', 'App\Http\Controllers\PeriodController@create')->name('period.create'); 

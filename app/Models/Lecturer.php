@@ -9,6 +9,11 @@ class Lecturer extends Model
 {
     use HasFactory;
     public $timestamps = false;
+    protected $fillable = [ 
+        'id',
+        'name',
+        'nip'
+    ];
     
     public function user(){
         return $this->belongsTo('App\Models\User');

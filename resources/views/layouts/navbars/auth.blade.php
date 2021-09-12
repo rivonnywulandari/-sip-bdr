@@ -17,6 +17,12 @@
                     <p>{{ __('Home') }}</p>
                 </a>
             </li>
+            <li class="{{ $elementActive == 'user' ? 'active' : '' }}">
+                <a href="{{ route('user.index') }}">
+                    <i class="nc-icon nc-single-02"></i>
+                    <p>{{ __(' User Management ') }}</p>
+                </a>
+            </li>
             <li class="{{ $elementActive == 'period' ? 'active' : '' }}">
                 <a href="{{ route('period.index') }}">
                     <i class="nc-icon nc-calendar-60"></i>
@@ -37,7 +43,7 @@
             </li>
             <li class="{{ $elementActive == 'profile' ? 'active' : '' }}">
                 <a href="{{ route('profile.edit') }}">
-                    <i class="nc-icon nc-single-02"></i>
+                    <i class="nc-icon nc-circle-10"></i>
                     <p>{{ __(' User Profile ') }}</p>
                 </a>
             </li>

@@ -34,12 +34,6 @@ class ClassroomController extends Controller
         return back()->with('success', 'Excel data successfully imported.');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Classroom  $classroom
-     * @return \Illuminate\Http\Response
-     */
     public function showDetail($id, $action=null)
     {
         $classroom = Classroom::findOrFail($id);
