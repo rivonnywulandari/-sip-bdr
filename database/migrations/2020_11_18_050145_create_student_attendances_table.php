@@ -17,7 +17,7 @@ class CreateStudentAttendancesTable extends Migration
             $table->id();
             $table->foreignId('krs_id')->constrained('krs');
             $table->foreignId('meeting_id')->constrained('meetings');
-            $table->foreignId('student_location_id')->constrained('student_locations');
+            $table->foreignId('student_location_id')->constrained('student_locations')->nullable();
             $table->string('presence_status');
             $table->timestamps();
         });
