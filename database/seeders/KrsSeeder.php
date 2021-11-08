@@ -14,6 +14,6 @@ class KrsSeeder extends Seeder
      */
     public function run()
     {
-        Krs::factory()->count(25)->create();
+        Krs::factory()->count(120)->create();
     }
 }

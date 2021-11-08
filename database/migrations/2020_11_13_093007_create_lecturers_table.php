@@ -17,6 +17,8 @@ class CreateLecturersTable extends Migration
             $table->foreignId('id')->constrained('users');
             $table->string('name');
             $table->string('nip');
+
+            $table->primary('id');
         });
     }
 

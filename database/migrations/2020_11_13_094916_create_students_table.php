@@ -18,6 +18,8 @@ class CreateStudentsTable extends Migration
             $table->string('name');
             $table->string('nim');
             $table->foreignId('lecturer_id');
+
+            $table->primary('id');
             $table->foreign('lecturer_id')->references('id')->on('lecturers');
         });
     }
